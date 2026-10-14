@@ -1,59 +1,36 @@
-# Лендинг для обжарки кофе «Кварта»
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Описание проекта
+## Getting Started
 
-Это тестовое задание на разработку лендинга для кофейной обжарки «Кварта» из Минска. Проект представляет собой одностраничный сайт с каталогом кофе, формой заявки на подписку или разовый заказ, и информацией о доставке.
+First, run the development server:
 
-### Основные особенности
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-- **Клиент:** Обжарка «Кварта», Минск
-- **Стек:** Next.js (рекомендуется), любой фреймворк на выбор
-- **Хостинг:** Vercel, Netlify, Cloudflare Pages или аналог
-- **Форма заявки:** POST /api/lead с валидацией белорусских номеров
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Структура сайта
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-1. **Главный экран** — представление бренда, УТП
-2. **О нас** — история, философия свежести
-3. **Ассортимент** — кофе с описанием вкусов и ценами
-4. **Подписка** — условия подписки с автоматической доставкой
-5. **Доставка и самовывоз** — информация о доставке по Минску
-6. **Контакты** — адрес, часы работы, форма заявки
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### Технические требования
+## Learn More
 
-- Валидация телефона (белорусские номера)
-- Защита от повторных отправок (10 минут)
-- Отслеживание источника рекламы
-- Обработка ошибок отправки
-- Хранение заявок: SQLite / файл / иное (указать в README)
+To learn more about Next.js, take a look at the following resources:
 
-### Бонусы (не обязательно)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- Дублирование заявок в Telegram-бот
-- Превью ссылки в мессенджерах (OG теги)
-- Анимации (без торможения)
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Сессии работы с ИИ
+## Deploy on Vercel
 
-В директории [`sessions`](./sessions/) хранятся экспорты сессий работы с ИИ-инструментами (Claude Code, OpenSpec и др.). Это позволяет отслеживать процесс разработки, анализировать ошибки и демонстрировать подход к управлению ИИ.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-### Как использовать
-
-1. Каждая сессия сохраняется с уникальным номером
-2. Сессии содержат полную историю диалога и принятых решений
-3. Экспорты используются для отчётности перед заказчиком
-
-## Дедлайн
-
-**19 октября, 18:00 по Москве**
-
-## Контакты
-
-- Адрес: Минск, ул. Короля, 9
-- Часы работы: пн–пт 8:00–20:00, сб–вс 10:00–18:00
-- Доставка по Минску: пятница, от 50 BYN бесплатно
-
----
-
-*Проект создан для демонстрации навыков веб-разработки и работы с ИИ-инструментами.*
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
