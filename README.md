@@ -1,5 +1,42 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Development
+
+### Requirements
+
+- Node.js 24+
+- pnpm 12 (`corepack enable`)
+
+### Installation
+
+```bash
+pnpm install
+```
+
+### Commands
+
+| Command         | Description                              |
+|-----------------|------------------------------------------|
+| `dev`           | Запустить dev-сервер                     |
+| `build`         | Создать продакшен-сборку                 |
+| `start`         | Запустить продакшен-сборку               |
+| `lint`          | Запустить ESLint                         |
+| `typecheck`     | Проверить типы TypeScript                |
+| `format`        | Отформатировать код с Prettier           |
+| `format:check`  | Проверить форматирование без изменений   |
+
+### Project Structure
+
+```
+src/
+├── app/          # Маршруты (Next.js App Router)
+├── components/   # UI-компоненты
+├── lib/          # Утилиты и серверная логика
+└── data/         # Статический контент
+```
+
+See `.env.example` for environment variables.
+
 ## Getting Started
 
 First, run the development server:
