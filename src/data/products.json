@@ -1,0 +1,52 @@
+[
+  {
+    "type": "coffee",
+    "id": "ethiopia",
+    "name": "Эфиопия Иргачеффе",
+    "description": "Светлая обжарка с цветочными нотами и бергамотом",
+    "price": 32,
+    "weight": "250г",
+    "roastLevel": "light",
+    "notes": ["цветочный", "бергамот"],
+    "recommendedFor": "для ценителей светлых сортов"
+  },
+  {
+    "type": "coffee",
+    "id": "colombia",
+    "name": "Колумбия Уила",
+    "description": "Средняя обжарка с карамельными и яблочными нотами",
+    "price": 29,
+    "weight": "250г",
+    "roastLevel": "medium",
+    "notes": ["карамель", "красное яблоко"],
+    "recommendedFor": "сбалансированный вкус"
+  },
+  {
+    "type": "coffee",
+    "id": "brazil",
+    "name": "Бразилия Серрадо",
+    "description": "Темная обжарка с ореховыми и шоколадными нотами, идеально для эспрессо",
+    "price": 26,
+    "weight": "250г",
+    "roastLevel": "medium-dark",
+    "notes": ["орех", "шоколад"],
+    "recommendedFor": "эспрессо"
+  },
+  {
+    "type": "drip-pack",
+    "id": "drip-pack",
+    "name": "Дрип-пакеты ассорти",
+    "description": "Удобный формат для приготовления фильтром",
+    "price": 18,
+    "quantity": 10
+  },
+  {
+    "type": "subscription",
+    "id": "subscription",
+    "name": "Подписка на кофе",
+    "description": "Свежий кофе каждый месяц",
+    "price": 54,
+    "period": "месяц",
+    "includes": ["2 пачки по 250 г", "Бесплатная доставка"]
+  }
+]
