@@ -1,36 +1,16 @@
 # Изображения
 
-Эта папка содержит изображения для сайта "Кварта".
+Стоковые фото с Unsplash (не фото самой «Кварты»), [Unsplash License](https://unsplash.com/license): бесплатно, в т. ч. для коммерческого использования, атрибуция не обязательна.
 
-## Требуемые изображения
-
-| Назначение                      | Имя файла             | Размер   | Лицензия        |
-| ------------------------------- | --------------------- | -------- | --------------- |
-| Hero-изображение                | hero.webp             | ~2000 px | Unsplash/Pexels |
-| Изображение продукта (Эфиопия)  | product-ethiopia.webp | ~800 px  | Unsplash/Pexels |
-| Изображение продукта (Колумбия) | product-colombia.webp | ~800 px  | Unsplash/Pexels |
-| Изображение продукта (Бразилия) | product-brazil.webp   | ~800 px  | Unsplash/Pexels |
-| Секция "О нас"                  | about.webp            | ~1500 px | Unsplash/Pexels |
-
-## Источники (предполагаемые)
-
-- **Hero:** Unsplash — запрос "coffee beans" или "fresh coffee"
-- **Продукты:** Pexels — запрос "coffee packaging" или "coffee bag"
-- **О нас:** Unsplash — запрос "coffee roastery" или "barista"
+| Файл                    | Размер    | Источник                                                                                    | Alt                               |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------- | --------------------------------- |
+| `hero.webp`             | 2000×1325 | [Immo Wegmann](https://unsplash.com/photos/REqK8jIAtv8)                                     | Зёрна кофе крупным планом         |
+| `about.webp`            | 1000×1500 | [Coffee beans are roasting inside a large machine](https://unsplash.com/photos/lcBt6ImTmXU) | Кофейные зёрна в барабане ростера |
+| `product-ethiopia.webp` | 800×800   | [Bernd Dittrich](https://unsplash.com/photos/U2AgTbVPwlE)                                   | Зёрна кофе Эфиопия Иргачеффе      |
+| `product-colombia.webp` | 800×800   | [Indra Projects](https://unsplash.com/photos/H80RH1Hhvu8)                                   | Зёрна кофе Колумбия Уила          |
+| `product-brazil.webp`   | 800×800   | [Matthew Feeney](https://unsplash.com/photos/TaFr0XnSFFs)                                   | Зёрна кофе Бразилия Серрадо       |
 
 ## Формат
 
-- Исходники: WebP/JPEG q90+, размер до ~2000 px
-- next/image автоматически конвертирует в WebP и создаёт srcset
-
-## Alt-тексты
-
-- hero: "Зёрна кофе крупным планом"
-- product-ethiopia: "Свежая упаковка кофе Эфиопия Иргачеффе"
-- product-colombia: "Упаковка кофе Колумбия Уила"
-- product-brazil: "Упаковка кофе Бразилия Серрадо"
-- about: "Кофейные зёрна на деревянной поверхности"
-
-## Примечание
-
-Изображения должны быть загружены перед запуском продакшена. Временно можно использовать placeholder-изображения.
+- WebP q90, без предсжатия; next/image сам создаёт srcset и конвертирует.
+- Фото товаров обрезаны до квадрата 800×800.

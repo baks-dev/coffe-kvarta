@@ -53,7 +53,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - **Заглушки контактов**: Телефон `+375 (29) 123-45-67` и email `hello@example.com` — фиктивные данные для MVP.
 - **Обжарка сортов**: Обжарка Колумбии medium и Бразилии medium-dark не указана в ТЗ, выбраны по умолчанию.
 - **Самовывоз**: Доступен в любое рабочее время (часы берутся из `hours` в `site.ts`).
-- **Источники изображений**: hero, продукты и секция "О нас" загружаются с Unsplash/Pexels (см. `public/images/README.md`).
+- **Источники изображений**: стоковые фото с Unsplash (не фото самой «Кварты»), Unsplash License; ссылки на каждое фото — в `public/images/README.md`.
 
 ## Development
 
