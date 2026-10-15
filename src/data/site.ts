@@ -5,14 +5,14 @@ export const siteData = {
   email: 'hello@example.com',
   hours: {
     weekday: '8:00–20:00',
-    weekend: '10:00–18:00'
+    weekend: '10:00–18:00',
   },
   delivery: {
     freeThreshold: 50,
     day: 'пятница',
-    city: 'Минск'
+    city: 'Минск',
   },
   pickup: {
-    address: 'Минск, ул. Короля, 9'
-  }
+    address: 'Минск, ул. Короля, 9',
+  },
 };

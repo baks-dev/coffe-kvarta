@@ -4,13 +4,13 @@
 
 ## Требуемые изображения
 
-| Назначение | Имя файла | Размер | Лицензия |
-|-----------|----------|--------|----------|
-| Hero-изображение | hero.webp | ~2000 px | Unsplash/Pexels |
-| Изображение продукта (Эфиопия) | product-ethiopia.webp | ~800 px | Unsplash/Pexels |
-| Изображение продукта (Колумбия) | product-colombia.webp | ~800 px | Unsplash/Pexels |
-| Изображение продукта (Бразилия) | product-brazil.webp | ~800 px | Unsplash/Pexels |
-| Секция "О нас" | about.webp | ~1500 px | Unsplash/Pexels |
+| Назначение                      | Имя файла             | Размер   | Лицензия        |
+| ------------------------------- | --------------------- | -------- | --------------- |
+| Hero-изображение                | hero.webp             | ~2000 px | Unsplash/Pexels |
+| Изображение продукта (Эфиопия)  | product-ethiopia.webp | ~800 px  | Unsplash/Pexels |
+| Изображение продукта (Колумбия) | product-colombia.webp | ~800 px  | Unsplash/Pexels |
+| Изображение продукта (Бразилия) | product-brazil.webp   | ~800 px  | Unsplash/Pexels |
+| Секция "О нас"                  | about.webp            | ~1500 px | Unsplash/Pexels |
 
 ## Источники (предполагаемые)
 

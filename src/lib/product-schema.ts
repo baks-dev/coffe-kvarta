@@ -4,7 +4,7 @@ const base = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
-  price: z.number().positive()
+  price: z.number().positive(),
 });
 
 export const ProductSchema = z.discriminatedUnion('type', [
@@ -13,17 +13,17 @@ export const ProductSchema = z.discriminatedUnion('type', [
     weight: z.string(),
     roastLevel: z.enum(['light', 'medium', 'medium-dark', 'dark']),
     notes: z.array(z.string()),
-    recommendedFor: z.string().optional()
+    recommendedFor: z.string().optional(),
   }),
   base.extend({
     type: z.literal('drip-pack'),
-    quantity: z.number()
+    quantity: z.number(),
   }),
   base.extend({
     type: z.literal('subscription'),
     period: z.string(),
-    includes: z.array(z.string())
-  })
+    includes: z.array(z.string()),
+  }),
 ]);
 
 export type Product = z.infer<typeof ProductSchema>;
