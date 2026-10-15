@@ -1,26 +1,202 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Цвета палитры */
+  --background: #f1ede3;
+  --surface: #e9e2d5;
+  --card: #f8f5ee;
+  --foreground: #1a1814;
+  --muted-foreground: #625d52;
+  --primary: #1a1814;
+  --primary-foreground: #f8f5ee;
+  --espresso: #1f1a14;
+  --espresso-foreground: #f1ede3;
+  --accent: #cae18a;
+  --accent-foreground: #1a1814;
+  --border: #ddd6c8;
+  --input: #8c8574;
+  --ring: #1a1814;
+  --ring-inverse: #f1ede3;
+  --destructive: #a3341f;
+  --success: #3d6b2c;
+
+  /* Радиусы */
+  --radius-sm: 2px;
+  --radius-card: 4px;
+  --radius-pill: 9999px;
+
+  /* Тени */
+  --shadow-card: 0 2px 8px color-mix(in srgb, var(--foreground) 8%, transparent);
+
+  /* Контейнер и отступы */
+  --container-page: 72rem;
+  --spacing-section: 64px;
+
+  /* Переопределение отступа от md */
+  --spacing-section-desktop: 96px;
+
+  /* Шрифты */
+  --font-heading: var(--font-lora);
+  --font-body: var(--font-golos-text);
+
+  /* Типографическая шкала */
+  --text-display: clamp(2.5rem, 1.6rem + 3.6vw, 3.75rem);
+  --text-h2: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem);
+  --text-h3: 1.25rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-eyebrow: 0.75rem;
+
+  /* Локальные переменные для фокуса */
+  --focus-ring: var(--ring);
+  --focus-ring-offset: 2px;
+
+  /* Межстрочные интервалы для типографической шкалы */
+  --leading-display: 1.05;
+  --leading-h2: 1.15;
+  --leading-h3: 1.3;
+  --leading-body: 1.6;
+  --leading-small: 1.5;
+  --leading-eyebrow: 1.4;
+}
+
+/* Базовые стили в слое base */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+  }
+
+  /* Глобальное правило для видимого фокуса */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Заголовки */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Плавная прокрутка только если не запрошен reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Переопределение отступа от md */
+@media (width >= 48rem) {
+  :root {
+    --spacing-section: var(--spacing-section-desktop);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-espresso: var(--espresso);
+  --color-espresso-foreground: var(--espresso-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-inverse: var(--ring-inverse);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-focus-ring: var(--focus-ring);
+
+  --radius-sm: var(--radius-sm);
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+  --radius: var(--radius-card);
+
+  --shadow-card: var(--shadow-card);
+
+  --container-page: var(--container-page);
+  --spacing-section: var(--spacing-section);
+
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+
+  --text-display: var(--text-display);
+  --text-display--line-height: var(--leading-display);
+  --text-h2: var(--text-h2);
+  --text-h2--line-height: var(--leading-h2);
+  --text-h3: var(--text-h3);
+  --text-h3--line-height: var(--leading-h3);
+  --text-body: var(--text-body);
+  --text-body--line-height: var(--leading-body);
+  --text-small: var(--text-small);
+  --text-small--line-height: var(--leading-small);
+  --text-eyebrow: var(--text-eyebrow);
+  --text-eyebrow--line-height: var(--leading-eyebrow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Утилиты для типографики */
+@utility rounded-card {
+  border-radius: var(--radius-card);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility text-display {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  font-family: var(--font-heading);
+}
+
+@utility text-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-h2);
+  font-family: var(--font-heading);
+}
+
+@utility text-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--leading-h3);
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+@utility text-body {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-family: var(--font-body);
+}
+
+@utility text-small {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+  font-family: var(--font-body);
+}
+
+@utility text-eyebrow {
+  font-size: var(--text-eyebrow);
+  line-height: var(--leading-eyebrow);
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Переопределение фокуса на тёмных поверхностях (только для потомков) */
+:is(.bg-espresso, .bg-primary) :focus-visible {
+  --focus-ring: var(--ring-inverse);
 }
