@@ -1,0 +1,375 @@
+ ▐▛███▛█   Claude Code v2.1.301
+▝▜██████▀  Opus 5.5 · Claude Pro
+ ▝▝   ▝▝   /mnt/1TB/HTML/coffe-kvarta
+
+
+❯ /clear                                                                        
+
+❯ .agents/skills/openspec-propose/SKILL.md создай спецификацию по задаче        
+  tasks/04-landing-sections.md                                                  
+
+  Read 1 file, listed 2 directories, ran 3 shell commands (ctrl+o to expand)
+
+● Изучил задачу, контекст OpenSpec, текущие данные и дизайн-систему. Теперь
+  посмотрю макеты в images/design/ и документацию Next.js 16.4, после чего задам
+  уточняющие вопросы.
+
+  Read 6 files, listed 1 directory, ran 4 shell commands (ctrl+o to expand)
+
+● Изучил ADR, документацию Next.js 16.4, макет design.png и прошлые изменения —
+  для SSG подойдёт ensureStatic = 'navigation'. Прежде чем писать артефакты,
+  нужно решить три вопроса, определяющих объём работы.
+
+● User answered Claude's questions:
+  ⎿  · Форма заявки — это задача 05. Что в задаче 04 делать с секцией формы? → 
+     Оболочка + контракт (Recommended)
+     · Рукописные надписи из макета («Свежая обжарка каждую неделю», «С любовью 
+     к хорошему кофе»): как с ними поступить? → Inline SVG
+     · Тексты секций сейчас минимальны (content.ts). Как поступить с копирайтом?
+     → Я пишу в спеке (Recommended)
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Web Search("Минск улица Короля 9 координаты")
+  ⎿  Did 1 search in 5s
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Нашёл координаты мастерской по адресу ул. Короля, 9 (53.902189, 27.542084)
+  через OpenStreetMap. Теперь проверю инструменты для генерации рукописных
+  SVG-надписей и создам change.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● Создаю change и получаю инструкции схемы.
+
+● Bash(openspec new change "add-landing-sections" && openspec status --change
+      "add-landing-sections" --json && openspec instructions proposal --change
+      "add-landing-sec…)
+  ⎿  - Creating change 'add-landing-sections' with schema 'spec-driven'...
+     Created change 'add-landing-sections' at openspec/changes/add-landing-
+     sections/
+     … +139 lines (ctrl+o to expand)
+  ⎿  Created openspec/changes/add-landing-sections/.openspec.yaml (+2 -0)
+      1 +schema: spec-driven                                             
+      2 +created: 2026-10-16                                             
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● Write(openspec/changes/add-landing-sections/proposal.md)
+  ⎿  Wrote 48 lines to openspec/changes/add-landing-sections/proposal.md
+      1 # Proposal
+      3 ## Why
+      5 Сейчас на главной странице лежит заглушка `create-next-app` (`src
+        но у посетителя из рекламы ничего нет: ни ассортимента с ценами, 
+         Без секций нельзя встроить форму (05), настроить SEO (09) и заме
+        рить Lighthouse (10). Задача 04 — следующая по графику, её ждут 0
+      6 
+      8 
+        верных секций. Страница экспортирует `ensureStatic = 'navigation'
+        ут `/` пререндерится без работы во время запроса (SSG).
+     … +95 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Proposal готов. Пишу спецификации: новую capability landing-page и дельту к
+  content-and-data.
+
+● Write(openspec/changes/add-landing-sections/specs/landing-page/spec.md)
+  ⎿  Wrote 276 lines to
+     openspec/changes/add-landing-sections/specs/landing-page/spec.md
+       1 # Spec Delta
+       3 ## Purpose
+       4 
+         в каком порядке, как они себя ведут и как связаны с формой заявк
+         дписку или разовый заказ.
+       6 
+       8 
+       9 ### Requirement: Статический рендеринг главной страницы
+         . Ответ на запрос MUST NOT зависеть от cookies, заголовков, пара
+         та во время запроса, сборка MUST завершиться ошибкой.
+     … +428 lines (ctrl+o to expand)
+
+● Write(openspec/changes/add-landing-sections/specs/content-and-data/spec.md)
+  ⎿  Wrote 45 lines to
+     openspec/changes/add-landing-sections/specs/content-and-data/spec.md
+       1 # Spec Delta
+       2 
+       3 ## MODIFIED Requirements
+       5 ### Requirement: Система предоставляет данные сайта
+       6 
+       7 Система SHALL хранить контактную информацию, часы работы, услови
+         я доставки и самовывоза, а также географические координаты масте
+       8 
+       9 #### Scenario: Структура данных сайта
+      10 - **WHEN** модуль `src/data/site.ts` импортируется
+     … +72 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Спеки прошли валидацию. Уточняю одну проверку, чтобы она не зависела от
+  внутренней структуры .next, и перехожу к design.md.
+
+● Update(openspec/changes/add-landing-sections/specs/landing-page/spec.md)
+  ⎿  Added 2 lines, removed 2 lines
+      10  Весь HTML маршрута `/` SHALL формироваться на этапе `pnpm build
+          `. Ответ на запрос MUST NOT зависеть от cookies, заголовков, па
+          раметров запроса или текущего времени. Если в маршрут попадёт р
+          абота во время запроса, сборка MUST завершиться ошибкой.
+      11  
+      12  #### Scenario: Контент есть в собранном HTML
+      13 -- **WHEN** выполнена команда `pnpm build`                      
+      14 -- **THEN** сборка завершается с кодом 0, а файл `.next/server/a
+         -pp/index.html` содержит строки «Кофе, который приезжает свежим»
+         -, «Эфиопия Иргачеффе», «32 BYN», «54 BYN / месяц» и «Минск, ул.
+         - Короля, 9»                                                    
+      13 +- **WHEN** выполнена команда `pnpm build`, затем `pnpm start`, 
+         +и HTML страницы `/` получен через `curl` (без выполнения JavaSc
+         +ript)                                                          
+      14 +- **THEN** сборка завершилась с кодом 0, а полученный HTML соде
+         +ржит строки «Кофе, который приезжает свежим», «Эфиопия Иргачефф
+         +е», «32 BYN», «54 BYN / месяц» и «Минск, ул. Короля, 9»        
+      15  
+      16  #### Scenario: Запрет на работу во время запроса
+      17  - **WHEN** в серверный компонент страницы добавлен вызов `cooki
+          es()` или `new Date()` и запущен `pnpm build`
+
+● Update(openspec/changes/add-landing-sections/specs/content-and-data/spec.md)
+  ⎿  Added 1 line, removed 1 line
+      20  
+      21  #### Scenario: Тексты секций
+      22  - **WHEN** модуль `src/data/content.ts` импортируется
+      23 -- **THEN** content.hero={eyebrow:"Мастерская обжарки · Минск", 
+         -headline:"Кофе, который приезжает свежим", subheading:"Обжарива
+         -ем небольшими партиями по четвергам, а в пятницу привозим по Ми
+         -нску. Зерно приходит к вам на 1–3 день после обжарки.", cta:"Ос
+         -тавить заявку", secondaryCta:"О подписке", handwriting:"Свежая 
+         -обжарка каждую неделю"}; content.products.title="Наши сорта"; c
+         -ontent.about.title="Мы — Аня и Дмитрий"; content.about.whyFresh
+         -.title="Почему свежесть важна"; content.about.whyFresh.steps со
+         -держит три шага с метками "Четверг", "Пятница", "1–3 день"; con
+         -tent.subscription.title="Две пачки по 250 г каждый месяц"; cont
+         -ent.subscription.cta="Оформить подписку"; content.delivery.titl
+         -e="Доставка и самовывоз"; content.lead.title="Оставьте заявку";
+         - content.contacts.title="Приходите в мастерскую"; content.foote
+         -r.copyright="© 2026 Кварта"                                    
+      23 +- **THEN** content.hero={eyebrow:"Мастерская обжарки · Минск", 
+         +headline:"Кофе, который приезжает свежим", subheading:"Обжарива
+         +ем небольшими партиями по четвергам, а в пятницу привозим по Ми
+         +нску. Зерно приходит к вам на 1–3 день после обжарки.", cta:"Ос
+         +тавить заявку", secondaryCta:"О подписке", handwriting:["Свежая
+         + обжарка", "каждую неделю"]}; content.about.handwriting=["С люб
+         +овью", "к хорошему кофе"]; content.products.title="Наши сорта";
+         + content.about.title="Мы — Аня и Дмитрий"; content.about.whyFre
+         +sh.title="Почему свежесть важна"; content.about.whyFresh.steps 
+         +содержит три шага с метками "Четверг", "Пятница", "1–3 день"; c
+         +ontent.subscription.title="Две пачки по 250 г каждый месяц"; co
+         +ntent.subscription.cta="Оформить подписку"; content.delivery.ti
+         +tle="Доставка и самовывоз"; content.lead.title="Оставьте заявку
+         +"; content.contacts.title="Приходите в мастерскую"; content.foo
+         +ter.copyright="© 2026 Кварта"                                  
+      24  
+      25  #### Scenario: Тексты из данных сайта
+      26  - **WHEN** `siteData.delivery.freeThreshold` равен 50, а `siteD
+          ata.hours.weekday` равен "8:00–20:00"
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Подтвердилось: Radix Slot использует хуки, поэтому <Button asChild> не
+  сработает в серверных компонентах — добавляю это в раздел «Не делать». Пишу
+  design.md.
+
+● Write(openspec/changes/add-landing-sections/design.md)
+  ⎿  Wrote 700 lines to openspec/changes/add-landing-sections/design.md
+      1 # Design
+      3 ## Контекст
+      4 
+        landing-page/spec.md` и `specs/content-and-data/spec.md`. Ниже те
+      6 
+      7 - **Next.js 16.4, React 19.3, App Router.** В `next.config.ts` вк
+        Cache Components старые `export const dynamic = 'force-static'` н
+        е работают. Статичность маршрута задаёт `export const ensureStati
+        -reference/03-file-conventions/02-route-segment-config/ensureStat
+         Синхронный IO (`new Date()`,
+     … +1033 lines (ctrl+o to expand)
+
+● Bash(cd /mnt/1TB/HTML/coffe-kvarta/openspec/changes/add-landing-sections &&
+      python3 - <<'EOF'
+      p='design.md'…)  ⎿  Create the task list that breaks down the implementation work.
+
+     Before writing tasks, check design.md for Open Questions. If any of th
+     … +57 lines (ctrl+o to expand)
+  ⎿  Updated openspec/changes/add-landing-sections/design.md (+11 -8)
+      334    alt: string;
+      335  }
+      336  
+      337 -export const images = {                                       
+      337 +/** Ключ — product.id; отсутствие ключа означает «у товара нет
+          + фото». */                                                    
+      338 +const products: Partial<Record<string, SiteImage>> = {        
+      339 +  ethiopia: { src: '/images/product-ethiopia.webp', width: 800
+          +, height: 800, alt: 'Зёрна кофе Эфиопия Иргачеффе' },         
+      340 +  colombia: { src: '/images/product-colombia.webp', width: 800
+          +, height: 800, alt: 'Зёрна кофе Колумбия Уила' },             
+      341 +  brazil: { src: '/images/product-brazil.webp', width: 800, he
+          +ight: 800, alt: 'Зёрна кофе Бразилия Серрадо' },              
+      342 +};                                                            
+      343 +                                                              
+      344 +export const images: { hero: SiteImage; about: SiteImage; prod
+          +ucts: Partial<Record<string, SiteImage>> } = {                
+      345    hero: { src: '/images/hero.webp', width: 2000, height: 1325,
+            alt: 'Зёрна кофе крупным планом' },
+      346    about: { src: '/images/about.webp', width: 1000, height: 150
+           0, alt: 'Кофейные зёрна в барабане ростера' },
+      340 -  products: {                                                 
+      341 -    ethiopia: { src: '/images/product-ethiopia.webp', width: 8
+          -00, height: 800, alt: 'Зёрна кофе Эфиопия Иргачеффе' },       
+      342 -    colombia: { src: '/images/product-colombia.webp', width: 8
+          -00, height: 800, alt: 'Зёрна кофе Колумбия Уила' },           
+      343 -    brazil: { src: '/images/product-brazil.webp', width: 800, 
+          -height: 800, alt: 'Зёрна кофе Бразилия Серрадо' },            
+      344 -  } as Partial<Record<string, SiteImage>>,                    
+      345 -} satisfies { hero: SiteImage; about: SiteImage; products: Par
+          -tial<Record<string, SiteImage>> };                            
+      347 +  products,                                                   
+      348 +};                                                            
+      349  ```
+      350  
+      351  ### `src/data/handwriting.ts` (генерируется скриптом, вручную 
+           не править)
+     ...
+      444      eyebrow: 'Как получить',
+      445      title: 'Доставка и самовывоз',
+      446      delivery: {
+      444 -      title: `Доставка по ${siteData.delivery.city === 'Минск'
+          - ? 'Минску' : siteData.delivery.city}`,                       
+      447 +      title: 'Доставка по Минску',                            
+      448        items: [
+      449          'Привозим по пятницам — на следующий день после обжарк
+           и',
+      450          `Бесплатно при заказе от ${freeThreshold} и для подпис
+           ки`,
+
+● Write(openspec/changes/add-landing-sections/tasks.md)
+  ⎿  Wrote 43 lines to openspec/changes/add-landing-sections/tasks.md
+      1 # Tasks
+      3 Тестового стека в проекте нет (Vitest/Playwright появятся в задач
+        е 11), поэтому задачи начинаются с данных и утилит. Их поведение 
+        из корня репозитория: `tsx` понимает алиас `@/` и JSON-импорты, к
+        л `design.md`. Строки, пути и контракты берутся оттуда дословно.
+      4 
+      6 
+      7 - [ ] 1.1 `src/lib/get-products.ts`: добавить типы `CoffeeProduct
+        функции `getShowcaseProducts()`, `getSubscriptionProduct()`. Суще
+        ет. De
+     … +211 lines (ctrl+o to expand)
+
+● Update(openspec/changes/add-landing-sections/tasks.md)
+  ⎿  Added 1 line, removed 1 line
+      39  ## 6. Финальная проверка
+      40  
+      41  - [ ] 6.1 Статика и качество: `pnpm lint && pnpm typecheck && p
+          npm format:check && pnpm build` завершаются с кодом 0. Затем `p
+          npm start` и `curl -s localhost:3000` содержит «Кофе, который п
+          риезжает свежим», «Эфиопия Иргачеффе», «32 BYN», «54 BYN / меся
+          ц», «Минск, ул. Короля, 9»; ровно одна строка `rel="preload"` с
+           `as="image"`, и она указывает на `hero`. Негативная проверка: 
+          временно добавить `const y = new Date().getFullYear();` в тело 
+          `Footer` → `pnpm build` падает с ошибкой пререндера `/` → откат
+          ить и пересобрать. Design: «Решения» п. 1, «Не делать».
+      42 -- [ ] 6.2 Запреты по исходникам: `rg -n '#[0-9a-fA-F]{3,8}\b|rg
+         -b\(|hsl\(|oklch\(|-(zinc|gray|neutral|stone|slate)-\d|dark:|fon
+         -t-serif|bg-gradient|w-screen|100vw|priority' src/components` пу
+         -ст; `rg -n 'new Date|Date.now|Math.random|cookies\(|headers\(|e
+         -xport const dynamic' src/app src/components` пуст; `rg -n 'api-
+         -maps.yandex|next/font' src/components` пуст; `rg -n 'overflow-x
+         -' src/app` пуст. Design: «Не делать».                          
+      42 +- [ ] 6.2 Запреты по исходникам: `rg -n '#[0-9a-fA-F]{3,8}\b|rg
+         +b\(|hsl\(|oklch\(|-(zinc|gray|neutral|stone|slate)-\d|dark:|fon
+         +t-serif|bg-gradient|w-screen|w-\[100vw\]|priority' src/componen
+         +ts` пуст (значения `100vw` в атрибуте `sizes` у `next/image` ра
+         +зрешены); `rg -n 'new Date|Date.now|Math.random|cookies\(|heade
+         +rs\(|export const dynamic' src/app src/components` пуст; `rg -n
+         + 'api-maps.yandex|next/font' src/components` пуст; `rg -n 'over
+         +flow-x' src/app` пуст. Design: «Не делать».                    
+      43  - [ ] 6.3 Ручная проверка в Chrome DevTools на собранной версии
+           (`pnpm start`) по сценариям `specs/landing-page/spec.md`: (а) 
+          на 360, 768, 1024, 1440 px `document.documentElement.scrollWidt
+          h === document.documentElement.clientWidth` даёт `true`; (б) `d
+          ocument.querySelectorAll('h1').length === 1`; (в) порядок `head
+          er, #products, #about, #subscription, #delivery, #lead-form, #c
+          ontacts, footer`; (г) навигация шапки видна только от 1024 px; 
+          на 360 и 768 px до неё нельзя дойти по Tab; (д) «Оставить заявк
+          у» в шапке и «Хочу» прокручивают к «Оставьте заявку», и заголов
+          ок не скрыт под шапкой; логотип возвращает `scrollY` к `0`; (е)
+           с отключённым JavaScript (DevTools → Command Menu → Disable Ja
+          vaScript) все секции, цены и фото видны, якоря работают; (ж) на
+           360×640 без прокрутки во вкладке Network нет запросов к `yande
+          x.ru` и `/handwriting/`, а на 1440 px надписи видны; (з) загруж
+          аются шрифты только Lora и Golos Text; (и) скринридер (или Acce
+          ssibility tree) объявляет кнопку «Хочу — Колумбия Уила» и регио
+          н «Доставка и самовывоз», надписей в дереве нет. Если какой-то 
+          пункт не проходит, исправить и повторить 6.1–6.3.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Спецификация готова: change add-landing-sections в
+  openspec/changes/add-landing-sections/. Все 4 артефакта на месте, openspec 
+  validate --strict проходит. Код проекта я не трогал, только артефакты
+  планирования.
+
+  Что внутри:
+  - proposal.md — зачем нужен change, что меняется, что не входит в scope (поля
+    формы, API, SEO, анимации, корзина, бургер-меню) и список файлов.
+  - specs/landing-page/spec.md — новая capability, 19 требований со сценариями
+    WHEN/THEN. Там порядок секций и их id, sticky-шапка высотой 64 px, один H1,
+    карточки из данных, передача намерения «Хочу» → форма, карта, работа без JS
+    и проверка на 360–1440 px без горизонтальной прокрутки (scrollWidth === 
+    clientWidth).
+  - specs/content-and-data/spec.md — изменены требования к текстам секций (новый
+    H1 «Кофе, который приезжает свежим») и к данным сайта (координаты geo),
+    добавлен реестр изображений.
+  - design.md — все разделы, которых требует config.yaml. Есть полный текст
+    content.ts для дословного переноса, контракты компонентов и утилит, сетки
+    раскладок и таблица граничных случаев.
+  - tasks.md — 18 задач в 6 группах. У каждой есть проверка командой или ручным
+    сценарием.
+
+  Ваши ответы в артефактах:
+  - Форма. Задача 04 делает оболочку секции #lead-form (заголовок, шаги, слот
+    для формы, строка «Удобнее позвонить?») и модуль src/lib/lead-intent.ts.
+    Задача 05 вставит форму в слот и подпишется на этот модуль.
+  - Тексты всех секций написаны в design.md и переносятся в content.ts дословно.
+    Адрес, часы, телефон и порог доставки подставляются из siteData.
+  - Рукописные надписи. Здесь я отошёл от вашего выбора «Inline SVG». Контуры
+    шрифта Caveat по-прежнему превращаются в SVG одноразовым скриптом, но
+    выводятся не inline, а через CSS-маску. Я замерил: две надписи inline
+    добавили бы около 75 КБ (около 25 КБ gzip) в HTML каждой загрузки, в том
+    числе на телефоне, где они скрыты. Цвет при этом по-прежнему берётся из
+    токенов, шрифт на сайт не подключается. Если нужен именно inline, это
+    меняется в одном месте design.md (п. 12).
+
+  Решения, которые я принял сам:
+  - Статичность задаёт export const ensureStatic = 'navigation': в Next 16 с
+    cacheComponents это заменяет старый force-static и роняет сборку, если в
+    маршрут попадёт работа во время запроса.
+  - Кнопки-ссылки в серверных компонентах делаются через buttonVariants() на
+    обычном <a>. <Button asChild> там не работает: Radix Slot вызывает хук.
+  - Порядок секций взят из макета: ассортимент сразу после hero.
+  - Год в подвале записан строкой «© 2026 Кварта»: new Date() ломает пререндер.
+  - Карта — iframe виджета Яндекса с ленивой загрузкой. Координаты мастерской
+    (53.902189, 27.542084) я взял из OpenStreetMap
+    (https://www.openstreetmap.org/way/25388496).
+
+  Два замечания:
+  - В проекте нет тестового стека, поэтому задачи не начинаются с тестов.
+    Поведение утилит и lead-intent проверяется однострочниками pnpm tsx -e,
+    вёрстка — сборкой и ручными сценариями в DevTools.
+  - Черновой план tasks/plans/04-landing-sections-plan.md противоречит
+    дизайн-системе (useState со scroll-listener, gray-*, © 2024). Задача 5.3
+    помечает его как заменённый.
+
+  Проверьте артефакты. Когда будете готовы, запустите /openspec-apply-change или
+  попросите меня применить change.
+
+✻ Crunched for 14m 35s · done 3:02

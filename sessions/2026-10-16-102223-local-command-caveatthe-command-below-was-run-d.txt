@@ -1,0 +1,942 @@
+ ▐▛███▛█   Claude Code v2.1.301
+▝▜██████▀  Haiku 5.5 · Claude Pro
+ ▝▝   ▝▝   /mnt/1TB/HTML/coffe-kvarta
+
+
+❯ /model                                                                        
+  ⎿  Set model to Haiku 5.5 and saved as your default for new sessions
+
+❯ .agents/skills/openspec-apply-change выполни задание по спецификации          
+  add-landing-sections                                                          
+
+  Read 2 files, listed 1 directory, ran 4 shell commands (ctrl+o to expand)
+
+● Артефакты прочитаны. Начинаю с группы 1 (данные и библиотеки). Задача 1.1:
+  get-products.ts.
+
+● Write(src/lib/get-products.ts)
+  ⎿  Added 21 lines
+       3  
+       4  const products = ProductSchema.array().parse(productsData);
+       5  
+       6 +export type CoffeeProduct = Extract<Product, { type: 'coffee' }
+         +>;                                                             
+       7 +export type DripPackProduct = Extract<Product, { type: 'drip-pa
+         +ck' }>;                                                        
+       8 +export type SubscriptionProduct = Extract<Product, { type: 'sub
+         +scription' }>;                                                 
+       9 +export type ShowcaseProduct = CoffeeProduct | DripPackProduct; 
+      10 +                                                               
+      11  export function getProducts(): Product[] {
+      12    return products;
+      13  }
+     ...
+      15  export function getProductById(id: string): Product | undefined
+           {
+      16    return products.find((p) => p.id === id);
+      17  }
+      18 +                                                               
+      19 +/** Товары типов coffee и drip-pack в порядке products.json. */
+      20 +export function getShowcaseProducts(): ShowcaseProduct[] {     
+      21 +  return products.filter(                                      
+      22 +    (p): p is ShowcaseProduct => p.type === 'coffee' || p.type 
+         +=== 'drip-pack',                                               
+      23 +  );                                                           
+      24 +}                                                              
+      25 +                                                               
+      26 +/** Товар id 'subscription'. Бросает Error, если его нет или ти
+         +п не subscription. */                                          
+      27 +export function getSubscriptionProduct(): SubscriptionProduct {
+      28 +  const product = products.find((p) => p.id === 'subscription')
+         +;                                                              
+      29 +  if (product?.type !== 'subscription') {                      
+      30 +    throw new Error('В src/data/products.json нет товара subscr
+         +iption');                                                      
+      31 +  }                                                            
+      32 +  return product;                                              
+      33 +}                                                              
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Задача 1.1 проверена. Ставлю отметку и делаю 1.2 и 1.3 вместе, так как они
+  независимы.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Write(src/lib/format.ts)
+  ⎿  Wrote 14 lines to src/lib/format.ts
+      1 /** 32 → '32 BYN' */
+      2 export function formatPrice(price: number): string {
+      3   return `${price} BYN`;
+      4 }
+      5 
+      6 /** '250г' → '250 г'; уже отформатированный вес не меняется */
+      7 export function formatWeight(weight: string): string {
+      8   return weight.trim().replace(/^(\d+)\s*г$/u, '$1 г');
+      9 }
+     … +4 lines (ctrl+o to expand)
+
+● Write(src/lib/yandex-map.ts)
+  ⎿  Wrote 20 lines to src/lib/yandex-map.ts
+      1 export interface GeoPoint {
+      2   lat: number;
+      3   lon: number;
+      4 }
+      5 
+        6&pt=27.542084%2C53.902189%2Cpm2rdm */
+      7 export function getYandexMapWidgetUrl(geo: GeoPoint, zoom = 16): 
+        string {
+      8   return buildUrl('https://yandex.ru/map-widget/v1/', geo, zoom);
+      9 }
+     … +15 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Задача 1.2 выдаёт ожидаемый вывод. Теперь 1.3 (geo, images) и 1.5
+  (lead-intent), они не зависят друг от друга.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Write(src/data/images.ts)
+  ⎿  Wrote 48 lines to src/data/images.ts
+       1 export interface SiteImage {
+       2   src: string;
+       3   width: number;
+       4   height: number;
+       5   alt: string;
+       7 
+       8 /** Ключ — product.id; отсутствие ключа означает «у товара нет ф
+         ото». */
+       9 const products: Partial<Record<string, SiteImage>> = {
+      10   ethiopia: {
+     … +39 lines (ctrl+o to expand)
+
+● Write(src/lib/lead-intent.ts)
+  ⎿  Wrote 44 lines to src/lib/lead-intent.ts
+       1 export const LEAD_INTERESTS = ['subscription', 'order', 'questio
+         n'] as const;
+       2 export type LeadInterest = (typeof LEAD_INTERESTS)[number];
+       4 export interface LeadIntent {
+       5   interest: LeadInterest;
+       6   /** id товара из products.json; отсутствует, если намерение бе
+         з товара */
+       8 }
+       9 
+      10 export type LeadIntentListener = (intent: LeadIntent) => void;
+     … +42 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Проверки 1.3 и 1.5 совпали с ожидаемым выводом. Теперь 1.4: полная замена
+  content.ts дословно по контракту из design.
+
+● Write(src/data/content.ts)
+  ⎿  Added 117 lines, removed 6 lines
+        1 +import { siteData } from '@/data/site';                       
+        2 +import type { CoffeeProduct } from '@/lib/get-products';      
+        3 +                                                              
+        4 +const freeThreshold = `${siteData.delivery.freeThreshold} BYN`
+          +;                                                             
+        5 +                                                              
+        6 +const hours = {                                               
+        7 +  weekday: `Пн–пт ${siteData.hours.weekday}`,                 
+        8 +  weekend: `Сб–вс ${siteData.hours.weekend}`,                 
+        9 +};                                                            
+       10 +                                                              
+       11  export const content = {
+       12 +  nav: [                                                      
+       13 +    { href: '#products', label: 'Кофе' },                     
+       14 +    { href: '#about', label: 'О нас' },                       
+       15 +    { href: '#subscription', label: 'Подписка' },             
+       16 +    { href: '#delivery', label: 'Доставка' },                 
+       17 +    { href: '#contacts', label: 'Контакты' },                 
+       18 +  ],                                                          
+       19 +  hours,                                                      
+       20 +  header: {                                                   
+       21 +    cta: 'Оставить заявку',                                   
+       22 +  },                                                          
+       23    hero: {
+        3 -    headline: 'Свежий кофе',                                  
+        4 -    subheading: 'Обжарка в четверг, доставка в пятницу',      
+       24 +    eyebrow: 'Мастерская обжарки · Минск',                    
+       25 +    headline: 'Кофе, который приезжает свежим',               
+       26 +    subheading:                                               
+       27 +      'Обжариваем небольшими партиями по четвергам, а в пятниц
+          +у привозим по Минску. Зерно приходит к вам на 1–3 день после о
+          +бжарки.',                                                     
+       28      cta: 'Оставить заявку',
+       29 +    secondaryCta: 'О подписке',                               
+       30 +    handwriting: ['Свежая обжарка', 'каждую неделю'],         
+       31    },
+       32 +  products: {                                                 
+       33 +    eyebrow: 'Ассортимент',                                   
+       34 +    title: 'Наши сорта',                                      
+       35 +    lead: 'Три сорта в зёрнах и дрип-пакеты. Выберите, что нра
+          +вится, — менеджер перезвонит и уточнит детали.',              
+       36 +    cta: 'Хочу',                                              
+       37 +    dripPackEyebrow: 'Для офиса и дороги',                    
+       38 +    dripPackCaption: 'дрип-пакетов в наборе',                 
+       39 +    quantityUnit: 'шт.',                                      
+       40 +    roastLabels: {                                            
+       41 +      light: 'Светлая обжарка',                               
+       42 +      medium: 'Средняя обжарка',                              
+       43 +      'medium-dark': 'Средне-тёмная обжарка',                 
+       44 +      dark: 'Тёмная обжарка',                                 
+       45 +    } satisfies Record<CoffeeProduct['roastLevel'], string>,  
+       46 +    empty: 'Ассортимент обновляется — позвоните нам:',        
+       47 +  },                                                          
+       48    about: {
+        8 -    story: 'Аня и Дмитрий — бывшие бариста, с 2019 года обжари
+          -вают кофе партиями по 5 кг',                                  
+       49 +    eyebrow: 'Кто мы',                                        
+       50 +    title: 'Мы — Аня и Дмитрий',                              
+       51 +    story: [                                                  
+       52 +      'Раньше мы работали бариста и каждый день видели, как по
+          +-разному раскрывается одно и то же зерно — свежее и пролежавше
+          +е месяц на складе.',                                          
+       53 +      'В 2019 году открыли свою мастерскую в Минске. Обжаривае
+          +м партиями по 5 кг: так каждую партию успеваем попробовать сам
+          +и и не держим запасов.',                                      
+       54 +    ],                                                        
+       55 +    handwriting: ['С любовью', 'к хорошему кофе'],            
+       56      whyFresh: {
+       57 +      title: 'Почему свежесть важна',                         
+       58        description:
+       11 -        'Обжарка в четверг → доставка в пятницу → зерно приход
+          -ит к вам на 1–3 день после обжарки',                          
+       59 +        'Самый яркий вкус у зерна — в первые недели после обжа
+          +рки, потом аромат постепенно уходит. Поэтому путь от ростера д
+          +о вашей чашки у нас короткий.',                               
+       60 +      steps: [                                                
+       61 +        { label: 'Четверг', title: 'Обжариваем', text: 'Партию
+          + 5 кг — под заказы этой недели.' },                           
+       62 +        { label: 'Пятница', title: 'Привозим', text: 'Развозим
+          + по Минску или ждём вас в мастерской.' },                     
+       63 +        { label: '1–3 день', title: 'Варите', text: 'Зерно у в
+          +ас на 1–3 день после обжарки — в самый вкус.' },              
+       64 +      ],                                                      
+       65      },
+       66    },
+       67    subscription: {
+       15 -    description: '2×250 г каждый месяц, бесплатная доставка', 
+       68 +    eyebrow: 'Подписка на кофе',                              
+       69 +    title: 'Две пачки по 250 г каждый месяц',                 
+       70 +    description: 'Свежая обжарка приезжает сама — не нужно пом
+          +нить, что кофе заканчивается.',                               
+       71 +    points: [                                                 
+       72 +      '2 пачки по 250 г — сорта выбираете вы',                
+       73 +      'Привозим в пятницу после обжарки',                     
+       74 +      'Доставка бесплатная',                                  
+       75 +    ],                                                        
+       76 +    cta: 'Оформить подписку',                                 
+       77 +    note: 'Менеджер перезвонит, поможет выбрать сорта и удобну
+          +ю пятницу.',                                                  
+       78    },
+       79    delivery: {
+       80 +    eyebrow: 'Как получить',                                  
+       81      title: 'Доставка и самовывоз',
+       82 +    delivery: {                                               
+       83 +      title: 'Доставка по Минску',                            
+       84 +      items: [                                                
+       85 +        'Привозим по пятницам — на следующий день после обжарк
+          +и',                                                           
+       86 +        `Бесплатно при заказе от ${freeThreshold} и для подпис
+          +ки`,                                                          
+       87 +        `Для заказа меньше ${freeThreshold} стоимость доставки
+          + назовёт менеджер`,                                           
+       88 +      ],                                                      
+       89 +    },                                                        
+       90 +    pickup: {                                                 
+       91 +      title: 'Самовывоз из мастерской',                       
+       92 +      items: [                                                
+       93 +        siteData.pickup.address,                              
+       94 +        hours.weekday,                                        
+       95 +        hours.weekend,                                        
+       96 +        'Забрать можно в любое время работы мастерской',      
+       97 +      ],                                                      
+       98 +    },                                                        
+       99    },
+       20 -};                                                            
+      100 +  lead: {                                                     
+      101 +    eyebrow: 'Заявка',                                        
+      102 +    title: 'Оставьте заявку',                                 
+      103 +    lead: 'Корзины и оплаты на сайте нет. Оставьте телефон — м
+          +енеджер перезвонит, уточнит заказ и день доставки.',          
+      104 +    steps: [                                                  
+      105 +      'Вы оставляете заявку',                                 
+      106 +      'Мы перезваниваем и уточняем детали',                   
+      107 +      'Привозим в пятницу или ждём в мастерской',             
+      108 +    ],                                                        
+      109 +    callPrompt: 'Удобнее позвонить?',                         
+      110 +  },                                                          
+      111 +  contacts: {                                                 
+      112 +    eyebrow: 'Контакты',                                      
+      113 +    title: 'Приходите в мастерскую',                          
+      114 +    labels: {                                                 
+      115 +      address: 'Адрес',                                       
+      116 +      phone: 'Телефон',                                       
+      117 +      email: 'Почта',                                         
+      118 +      hours: 'Часы работы',                                   
+      119 +    },                                                        
+      120 +    mapTitle: `Мастерская «Кварта» на карте: ${siteData.addres
+          +s}`,                                                          
+      121 +    mapLink: 'Открыть в Яндекс Картах',                       
+      122 +  },                                                          
+      123 +  footer: {                                                   
+      124 +    tagline: 'Мастерская обжарки в Минске с 2019 года',       
+      125 +    navLabel: 'Навигация в подвале',                          
+      126 +    copyright: '© 2026 Кварта',                               
+      127 +    photoCredit: 'Фото: Unsplash',                            
+      128 +  },                                                          
+      129 +} as const;                                                   
+      130 +                                                              
+      131 +export type SiteContent = typeof content;                     
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Задача 1.4 проходит все три проверки (grep пуст, typecheck exit 0). Группа 1
+  готова. Переходу к группе 2: установка devDependencies, нужна сеть.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Зависимости установлены. Добавляю скрипт build:handwriting в package.json.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Задача 2.1 готова. Перед написанием генератора проверю API opentype.js
+  (наличие Path.extend и getBoundingBox) по установленным типам.
+
+  Listed 1 directory (ctrl+o to expand)
+
+● Path.extend и getBoundingBox есть в типах. Пишу генератор
+  scripts/build-handwriting.ts по контракту из design.
+
+● Write(scripts/build-handwriting.ts)
+  ⎿  Wrote 99 lines to scripts/build-handwriting.ts
+       1 // Одноразовая генерация SVG-контуров рукописных надписей из шри
+         фта Caveat.
+       2 // Запуск: pnpm build:handwriting <путь к Caveat[wght].ttf>
+         ;
+       4 import { dirname, resolve } from 'node:path';
+       5 import opentype from 'opentype.js';
+       6 import { content } from '@/data/content';
+       8 const FONT_SIZE = 48;
+       9 const LINE_STEP = 52;
+      10 const SECOND_LINE_SHIFT = 24;
+     … +103 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Использование без аргумента даёт нужное сообщение и exit=1. Отмечаю 2.1 и 2.2,
+  затем 2.3: скачиваю Caveat во временный каталог в scratchpad и генерирую
+  ассеты.
+
+  Ran 1 shell command (ctrl+o to expand)
+● Ассеты сгенерированы. Оба SVG начинаются с одинаковой буквы «С» ("Свежая" и "С
+  любовью"), это совпадение, а не дубль. Проверяю критерии задачи 2.3.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Задача 2.3 проверена: оба SVG на месте, размеры положительные, TTF в
+  репозиторий не попал. Переходу к 2.4 (README для изображений).
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Задача 2.4 готова. Переходу к группе 3 (компоненты). Сначала быстро сверю
+  имена токенов в globals.css, чтобы классы из design совпали с реальными.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Токены на месте. Пишу 3.1: Section/SectionHeading и SiteNav.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Typecheck и lint проходят. Нашёл риск: при inverse оба класса цвета
+  (text-muted-foreground и text-espresso-foreground) попадают в cn, и twMerge
+  может не убрать один из них. Делаю выбор цвета явным.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Теперь 3.2: LeadIntentLink (единственный клиентский компонент секций) и
+  Handwriting (серверный, CSS-маска).
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● 3.2 проходит проверки, 'use client' остаётся только в lead-intent-link.tsx.
+  Перехожу к 3.3: карточка товара.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Группа 3 готова, typecheck и lint зелёные. Перед группой 4 (страница) сверяюсь
+  с документацией Next 16 в node_modules, как требует AGENTS.md: ensureStatic и
+  preload у next/image.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Документация подтверждает ensureStatic = 'navigation' (только при
+  cacheComponents, что включено) и preload вместо priority. Перед 4.1 делаю одну
+  правку: навигация подвала на 360 px должна переноситься, поэтому в SiteNav
+  добавляю flex-wrap.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Typecheck и lint проходят. Запускаю dev-сервер в фоне и проверяю 4.1:
+  отсутствие ошибок пререндера и наличие H1 в HTML.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Порт 3000 занят чужим процессом, поэтому ответ пришёл не от моего сервера.
+  Нельзя убивать неизвестный процесс; проверяю на 3001, куда dev-сервер
+  переключился сам.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Dev-сервер отдаёт страницу без ошибок, H1 найден, preload ведёт на hero.webp.
+  Визуальная проверка шапки на 360 px требует браузера. Проверяю, есть ли он в
+  системе.
+
+  Listed 1 directory (ctrl+o to expand)
+
+● Есть chromium и кэш Playwright. Проверю, доступен ли Playwright глобально,
+  чтобы снимать скриншоты и считать DOM-метрики.
+
+  Listed 1 directory (ctrl+o to expand)
+
+● Найден Chromium от Playwright. Ставлю playwright-core в scratchpad (вне
+  проекта), чтобы проверять DOM и ширину на нужных viewport.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Инструмент установлен. Пишу общий скрипт проверки: ширина, положение шапки
+  после прокрутки, видимость навигации, скриншот.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Браузерная проверка работает: на 360 px навигация скрыта, CTA видна, H1 один,
+  высота шапки 64 px. Смотрю скриншот hero на 360 px.
+
+  Read 2 files, listed 1 directory (ctrl+o to expand)
+
+● Hero на 360 px выглядит корректно, фото идёт под текстом, надпись скрыта.
+  Осталось подтвердить, что шапка sticky при прокрутке, и затем закрыть 4.1.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Шапка остаётся с top: 0 при прокрутке, 4.1 закрыта. Пишу 4.2: Products и About
+  и добавляю их в page.tsx.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Скрипт продублировал импорт Header. Перезаписываю page.tsx целиком, чтобы он
+  был чистым.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Карточки, цены и заголовки рендерятся, таймлайн один <ol>. Теперь проверяю
+  раскладку карточек по ширинам (ожидаются 1/2/4 колонки) и пустую витрину:
+  временно возвращаю [] и сразу откатываю.
+
+  Ran 1 shell command (ctrl+o to expand)
+● Колонки совпадают: 1/2/4 у карточек и 1/1/3 у таймлайна на 360/768/1440.
+  Теперь временная проверка пустой витрины с откатом.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Первая попытка не дала результата: grep искал текст без учёта <!-- -->,
+  который React вставляет между текстовыми узлами. Повторяю проверку корректно
+  (с ожиданием пересборки) и снова откатываю.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Пустая витрина показывает текст с tel:-ссылкой, после отката карточки на
+  месте. Отмечаю 4.2 и пишу 4.3: Subscription и Delivery.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Typecheck и lint проходят. Проверяю 4.3: текст цены, пункты подписки,
+  фокус-кольцо на тёмном баннере, пункты доставки, и временно меняю порог на 60.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Текст подписки и доставки на месте, порог 60 даёт «от 60 BYN», после отката
+  снова 50, site.ts восстановлен. Теперь проверяю фокус-кольцо кнопки подписки
+  клавиатурой.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Фокус есть, но обводка тёмная (rgb(26,24,20)), а по спеке должен быть светлый
+  ring-inverse. Смотрю правило фокуса в globals.css.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Правило выглядит правильным, но вычисленный цвет тёмный. Проверяю в браузере,
+  матчится ли селектор и какое значение у переменной.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Переменная --focus-ring на кнопке равна #f1ede3 (светлая), селектор матчится.
+  Значение обводки в двух замерах разное, что похоже на переход (transition) в
+  процессе. Повторяю замер после паузы.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● После 800 мс обводка светлая (rgb(241,237,227) = ring-inverse), а тёмное
+  значение было кадром перехода. Смотрю скриншот секции подписки.
+
+  Read 2 files (ctrl+o to expand)
+
+● Скриншот подтверждает: светлое кольцо фокуса на тёмном баннере, цена «54 BYN /
+  месяц», три пункта. Переходим к 4.4: LeadSection, Contacts, Footer.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Typecheck и lint проходят. Одна правка: переопределять цвет ссылок в подвале
+  через linkClassName рискованно для twMerge (два text-* цвета), поэтому убираю
+  его. Затем проверяю 4.4.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Все проверки 4.4 пройдены: loading="lazy", tel:-ссылки, target="_blank" с
+  noopener noreferrer, 5 ссылок в подвале, нет запрещённых слов, ширина без
+  прокрутки. Отмечаю 4.4 и перехожу к группе 5. Перед 5.1 смотрю, что ссылается
+  на next.svg и vercel.svg, и читаю README и файлы из 5.3.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Ссылки на next.svg/vercel.svg остались только в OpenSpec-артефактах и в
+  заглушке, которую я уже заменил. Удаляю файлы (5.1). В 5.3 есть нюанс: пункт
+  «Форма заявки (см. 05)» относится к задаче 05, а не к этому change, поэтому
+  его отмечать [x] нельзя. Это расхождение с критерием grep -c = 0 я вынесу в
+  отчёт. Делаю 5.1, 5.2, 5.3.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Проверка 5.1 не проходит из-за src/app/page.tsx.bak: это старая копия заглушки
+  create-next-app, которая ссылается на /next.svg. Смотрю, отслеживается ли
+  файл git-ом, прежде чем решать.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Файл не отслеживается git-ом, но побайтно совпадает с HEAD:src/app/page.tsx
+  (заглушка), то есть ничего не теряется. Он нужен только для критерия 5.1,
+  поэтому удаляю его и сообщаю об этом явно.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Критерий 5.1 выполнен (grep пуст, typecheck проходит). 5.2 тоже: шесть пунктов
+  и строка команды в таблице. Делаю 5.3.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Чек-лист 5.3 выполнен по сути: маркер в плане добавлен, все пункты секций
+  отмечены. Единственный невыполненный пункт — «Форма заявки», он относится к
+  задаче 05. Отмечаю 5.3 и переходу к группе 6, начиная с format:check, который
+  покажет, что Prettier не пропускает в новых файлах.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Prettier нашёл только шесть моих файлов. Форматирую их и перепроверяю
+  содержимое content.ts, чтобы убедиться, что строки не изменились.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Предупреждение о изменении файлов — это результат моего же prettier --write,
+  содержимое проверено. Строки content.ts не изменились, запрещённых слов нет.
+  Теперь 6.1: останавливаю мой dev-сервер (порт 3001, не трогаю чужой на 3000) и
+  запускаю полный набор lint && typecheck && format:check && build.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Команда прервалась (exit 144): pkill -f сопоставил собственную оболочку.
+  Проверяю, что мой сервер на 3001 остановлен, а чужой на 3000 цел.
+
+  Ran 2 shell commands (ctrl+o to expand)
+● Все четыре команды завершились с кодом 0, / предрендерен как статический
+  маршрут. Теперь запускаю pnpm start на порту 3002 (3000 занят чужим процессом)
+  и проверяю HTML по строкам и единственный preload.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Статическая разметка корректна: все контрольные строки есть, единственный
+  preload — hero.webp, и только у hero нет loading="lazy" (это ожидаемое
+  исключение). Теперь негативная проверка: временно вставляю new Date() в
+  подвал, сборка должна упасть; затем откат и пересборка. Сначала останавливаю
+  сервер на 3002, чтобы не мешал сборке.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Негативная проверка сработала: сборка падает с ошибкой пререндера /, файл
+  откатан. Пересобираю рабочую версию, так как неудачная сборка оставила .next в
+  неполном состоянии.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● 6.1 пройдена полностью (lint, typecheck, format, build, статическая разметка,
+  preload, негативный тест). Отмечаю её и перехожу к 6.2 — статические запреты
+  по исходникам.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Вывод rg ok не появился, поэтому я не уверен, что rg реально установлен.
+  Проверяю инструмент отдельно, иначе «пустой» результат ничего не доказывает.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● rg работает (это функция-обёртка над ripgrep), и тот же запрос через grep тоже
+  не находит совпадений. 6.2 выполнена. Отмечаю её.
+
+  Теперь 6.3, ручная проверка в браузере на собранной версии: (а)–(и). Поднимаю
+  pnpm start на 3002 и пишу один сценарий Playwright по всем пунктам.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Скрипт упал на моём тесте, а не на сайте: логотип есть и в шапке, и в подвале
+  (так и задумано). Ограничиваю локатор шапкой и запускаю снова.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Почти все пункты проходят. Для (з) по именам файлов (*-s.p.*.woff2) нельзя
+  понять, какие семейства загружены. Проверяю document.fonts напрямую.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● (з) выполнено: загружены только Lora и Golos Text. Последние проверки: нет
+  клиентских хуков и обработчиков в секциях, и визуально оцениваю полную
+  страницу на 360 и 1440 px.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Единственные совпадения — 'use client' в lead-intent-link.tsx (разрешено) и в
+  ui/sonner.tsx (существующий файл UI, вне scope). Смотрю полную страницу на 360
+  px.
+
+  Read 1 file (ctrl+o to expand)
+
+● Это уменьшенная копия скриншота 360 px, по ней видно общую раскладку: карточки
+  в один столбец, таймлайн вертикально, подвал с пятью ссылками. Все пункты 6.3
+  уже подтверждены проверками, поэтому закрываю их, останавливаю сервер на 3002
+  и делаю итоговую сверку.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Все 22 задачи change add-landing-sections выполнены и отмечены в tasks.md.
+  openspec instructions apply показывает 22/22, all_done. Ничего не закоммичено.
+
+  Что сделано
+  - Группа 1 (данные и библиотеки): get-products.ts дополнен, добавлены
+    format.ts, yandex-map.ts, images.ts, lead-intent.ts. В site.ts добавлен geo.
+    content.ts заменён дословно по контракту.
+  - Группа 2 (рукописные надписи): установлены opentype.js@1.3.4 и
+    @types/opentype.js@1.3.10 как devDependencies, добавлен скрипт
+    build:handwriting. Написан scripts/build-handwriting.ts. Caveat скачан во
+    временный каталог в scratchpad (не в репозиторий), сгенерированы
+    public/handwriting/*.svg и src/data/handwriting.ts. В
+    public/images/README.md добавлен раздел.
+  - Группа 3 (компоненты): Section, SectionHeading, SiteNav, LeadIntentLink
+    (единственный 'use client' в секциях), Handwriting, ProductCard.
+  - Группа 4 (страница и секции): page.tsx с ensureStatic = 'navigation', все
+    секции в порядке спеки, Footer.
+  - Группа 5: удалены public/next.svg и public/vercel.svg, в README добавлен
+    раздел допущений и строка команды, помечен устаревший план.
+  - Группа 6: lint, typecheck, format:check, build проходят с кодом 0.
+    Статическая разметка содержит все контрольные строки, единственный preload
+    ведёт на hero.webp. Негативный тест: new Date() в подвале роняет сборку с
+    ошибкой пререндера /, после отката сборка снова зелёная. В браузере
+    (Chromium через playwright-core в scratchpad) проверены ширины, порядок
+    секций, sticky-шапка, навигация по Tab, якоря и логотип, пустая витрина и
+    порог доставки, светлое кольцо фокуса на тёмном баннере, сетевые запросы,
+    загруженные шрифты (только Lora и Golos Text), работа без JS.
+
+  Что нужно знать
+  - tasks/04-landing-sections.md: пункт «Форма заявки (см. 05)» оставлен [ ],
+    потому что он относится к задаче 05. Из-за этого критерий 5.3 grep -c '\- \[
+    \]' = 0 не выполняется буквально. Я отметил 5.3 как выполненную по сути
+    задачи и вынес это расхождение сюда.
+  - Удалён src/app/page.tsx.bak. Это git-игнорируемая копия заглушки, побайтно
+    совпадающая с HEAD:src/app/page.tsx. Без её удаления не проходила проверка
+    5.1 (grep по src).
+  - Решения, которых не было в артефактах: tone="surface" для секций «Кто мы» и
+    «Доставка» (для чередования фонов). В header.tsx литерал 'Основная 
+    навигация' передаётся в SiteNav как label. Это расходится с конвенцией «без
+    русских литералов в JSX», но в content.ts по контракту ключа для него нет.
+  - Порт 3000 занят чужим процессом (next-server, pid 437984). Я его не трогал и
+    проверял на 3001/3002. Мои серверы остановлены.
+  - Изменения в pnpm-lock.yaml от pnpm add.
+
+  Файлы в scratchpad: /tmp/claude-1000/-mnt-1TB-HTML-coffe-kvarta/8b92413f-5a29-
+  48d4-b96b-f16e81374248/scratchpad/ (скрипты проверок в browser/).
+
+  Если нужен коммит, скажите, и я сделаю его в ветке
+  fix/content-and-data-review.
+
+✻ Cooked for 11m 31s · done 10:13
+
+❯ /model                                                                        
+  ⎿  Set model to Opus 5.5 and saved as your default for new sessions
+
+❯ проверь выполненное задание по спецификации add-landing-sections              
+
+  Listed 1 directory, ran 1 shell command (ctrl+o to expand)
+
+● Использую change add-landing-sections (другой можно выбрать через
+  /openspec-verify-change <name>). Сейчас перечитаю реализацию целиком и сравню
+  её со спекой и design.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Теперь перепроверю то, что ранее не было проверено напрямую: целостность
+  запрещённых к изменению файлов, свежую сборку, сценарий «нет товара
+  subscription» и видимость рукописных надписей на 1440 px.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Статика проходит без ошибок, защищённые файлы не изменены. Так как негативный
+  сценарий «Нет товара подписки» ещё не проверен, временно меняю id подписки в
+  products.json, запускаю сборку и затем восстанавливаю файл из резервной копии.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Скрипт работает по спеке, products.json восстановлен, сборка зелёная. Теперь
+  проверю рукописные надписи визуально на ширине 1440 px — ранее их проверяли
+  только через сетевые запросы.
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+● Отчёт о проверке: add-landing-sections
+
+  Реализация соответствует спецификации: все 19 требований выполнены,
+  критических проблем нет. Нашлись 2 предупреждения и 3 мелких замечания по
+  стилю. Один сценарий спеки (CLS) не измерялся, поэтому заключение «готово к
+  архивированию» я не ставлю.
+
+  Сводка
+
+  ┌─────────────────┬────────────────────────────────────────────────────────┐
+  │    Измерение    │                       Результат                        │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Полнота         │ 22/22 задач отмечены; 19/19 требований реализованы     │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │                 │ 19/19 требований найдены в коде. Сценарии проверены в  │
+  │ Корректность    │ браузере и сборкой. Не измерено: отсутствие сдвигов    │
+  │                 │ раскладки (CLS) на Slow 4G                             │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Согласованность │ Решения design соблюдены, есть 1 расхождение           │
+  │                 │ (предупреждение 2) и 3 мелких отступления от конвенций │
+  └─────────────────┴────────────────────────────────────────────────────────┘
+
+  Что проверено сейчас заново
+
+  - lint, typecheck, format:check, build: код возврата 0, маршрут / собран как
+    статический.
+  - Файлы, которые design запрещает менять (layout.tsx, globals.css,
+    products.json, product-schema.ts, src/components/ui/*), не тронуты.
+  - Сценарий «Нет товара подписки»: раньше его никто не проверял. С временно
+    переименованным id сборка падает с ошибкой пререндера / и текстом «В
+    src/data/products.json нет товара subscription». Файл восстановлен,
+    повторная сборка зелёная.
+  - Рукописные надписи на 1440 px: раньше видимость подтверждалась только по
+    сетевым запросам. На скриншотах обе надписи читаются и стоят на своих местах
+    («Свежая обжарка / каждую неделю» на фото hero, «С любовью / к хорошему
+    кофе» на фото ростера).
+  - Предыдущая браузерная проверка охватила пункты 6.3 (а)–(и): ширина без
+    горизонтальной прокрутки, порядок секций, один H1, навигация и Tab, якоря и
+    логотип, работа без JS, сетевые запросы, загрузка только Lora и Golos Text,
+    доступные имена.
+
+  Предупреждения (стоит исправить)
+
+  1. Критерий задачи 5.3 не выполнен буквально. grep -c '\- \[ \]' 
+     tasks/04-landing-sections.md даёт 1, а не 0: пункт «Форма заявки (см. 05)»
+     оставлен открытым, потому что форма относится к задаче 05. Решение по
+     существу верное, но задача отмечена [x] при невыполненном критерии.
+     Варианты: поправить критерий в
+     openspec/changes/add-landing-sections/tasks.md:37 на «равен 1 (пункт формы
+     — задача 05)» или отметить пункт формы. Второй вариант я не рекомендую: это
+     была бы неправда.
+  2. Сорт без фото не по design. В разделе «Граничные случаи» плашка должна
+     содержать первую ноту и метку обжарки. В
+     src/components/product-card.tsx:37-38 выводится только нота. На текущих
+     данных эта ветка не срабатывает (у всех сортов есть фото), но при
+     добавлении нового сорта без фото она понадобится. Исправление: добавить под
+     нотой <p className="text-small text-muted-foreground">{content.products.ro
+     astLabels[product.roastLevel]}</p>.
+
+  Мелкие замечания
+
+  3. Порядок импортов. Конвенция design требует @/components → @/lib → @/data, а
+     в коде @/data идёт раньше @/lib в файлах products.tsx:3-6,
+     product-card.tsx:3-6, contacts.tsx:3-6, footer.tsx:3-5,
+     lead-section.tsx:2-4, site-nav.tsx:1-2 и handwriting.tsx:1-2.
+  4. У ссылки «Открыть в Яндекс Картах» нет видимой рамки (contacts.tsx:68).
+     Вариант outline в ui/button.tsx задаёт цвет border-border, но не ширину
+     рамки. Сам ui/* по design менять нельзя, поэтому исправление локальное:
+     cn(buttonVariants({ variant: 'outline' }), 'border').
+  5. Литерал 'Основная навигация' в header.tsx:11 формально нарушает правило
+     «без русских строк в JSX». Но design сам задаёт это значение в контракте
+     SiteNav, а content.ts по контракту менять нельзя. Оставить как есть
+     допустимо.
+
+  Не проверено
+
+  - Сдвиги раскладки (CLS) на Slow 4G: замер в панели Performance не делал. По
+    коду все фото заданы через fill в контейнерах с фиксированным соотношением
+    сторон, так что сдвигов быть не должно.
+  - Озвучивание: «Хочу — Колумбия Уила» и регион «Доставка и самовывоз»
+    проверены через вычисление доступных имён в Playwright, а не живым
+    скринридером.
+  - Автотестов по сценариям нет: тестовый стек появится в задаче 11, всё
+    проверено вручную и сборкой.
+
+  Вне scope change (важно перед коммитом)
+
+  - В рабочем дереве есть изменения, не относящиеся к этому change: удалённые
+    openspec/changes/content-and-data/*, новый
+    openspec/changes/archive/2026-10-16-content-and-data/, а также
+    неотслеживаемые openspec/changes/add-lead-form/ и 2026-10-16-030327-…txt.
+    При коммите их стоит отделить.
+  - При реализации был удалён src/app/page.tsx.bak. Он игнорировался git-ом и
+    побайтно совпадал с заглушкой в HEAD, так что ничего не потеряно.
+
+  Критических проблем нет. Могу исправить пункты 2–4 (это несколько строк) и
+  поправить критерий 5.3 в tasks.md.
+
+✻ Baked for 1m 57s · done 10:17
+
+❯ /model                                                                        
+  ⎿  Set model to Haiku 5.5 and saved as your default for new sessions
+❯ /effort                                                                       
+  ⎿  Set effort level to medium (saved as your default for new sessions):
+     Balanced approach with standard implementation and testing
+
+❯ исправь все замечания                                                         
+
+● Исправляю замечания 1–4. Пункт 5 (литерал 'Основная навигация') оставлю:
+  вынести его без правки content.ts нельзя, а контракт этот файл фиксирует.
+  Сначала читаю нужные места.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Меняю порядок импортов во всех файлах (@/components → @/lib → @/data),
+  добавляю метку обжарки в плашку сорта без фото, добавляю рамку кнопке карты и
+  уточняю критерий 5.3.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Lint, typecheck и format проходят. Запускаю сборку, чтобы убедиться, что
+  пререндер / не сломан после правок.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Исправил четыре из пяти замечаний; пятое оставил как есть, и причина ниже.
+  Lint, typecheck, format:check и pnpm build проходят с кодом 0.
+
+  Что исправлено
+  1. Критерий 5.3 в openspec/changes/add-landing-sections/tasks.md: grep -c
+     теперь ожидается равным 1, а в скобках указано, что единственная открытая
+     строка — «Форма заявки» (задача 05).
+  2. Сорт без фото (src/components/product-card.tsx): в плашке под первой нотой
+     выводится метка обжарки, как требует design.
+  3. Порядок импортов: во всех затронутых файлах @/components → @/lib → @/data.
+  4. Кнопка карты: у ссылки «Открыть в Яндекс Картах» добавлен класс border,
+     чтобы рамка варианта outline была видна. Файл ui/button.tsx не менялся.
+
+  Что не исправлено
+  5. Литерал 'Основная навигация' в src/components/sections/header.tsx остаётся.
+  Чтобы убрать его из JSX, нужен новый ключ в content.ts, а контракт design
+  фиксирует этот файл дословно. Если хотите, добавлю ключ и сделаю отдельное
+  исключение из контракта: скажите.
+
+  Визуально новую рамку кнопки карты и плашку сорта без фото в браузере не
+  проверял. Текущие данные не выводят плашку сорта, так что эта ветка проверена
+  только типами и сборкой.
+
+✻ Sautéed for 37s · done 10:19
+
+❯ /model                                                                        
+  ⎿  Set model to Opus 5.5 and saved as your default for new sessions
+
+❯ проверь выполненное задание по спецификации add-landing-sections              
+
+● Перепроверяю change add-landing-sections после исправлений: смотрю, что
+  изменилось, и отдельно проверяю две правки, которые раньше не видел в браузере
+  (рамку кнопки карты и плашку сорта без фото).
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Awk-фильтр выделил три файла: content.ts перенесён из design без изменений
+  (порядок импортов задан контрактом), в get-products.ts порядок был задан
+  раньше. Теперь проверяю subscription.tsx.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● В subscription.tsx порядок импортов всё ещё нарушен (@/data раньше @/lib) —
+  исправляю одной строкой. Затем проверю в браузере рамку кнопки карты и плашку
+  сорта без фото, временно убрав фото Эфиопии из images.ts и вернув его обратно.
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+● Обе правки отображаются корректно. Возвращаю images.ts и запускаю финальную
+  проверку: lint, typecheck, format, сборку, поиск запрещённых шаблонов и
+  контрольные строки в итоговом HTML.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Повторная проверка: add-landing-sections
+
+  Все замечания прошлого отчёта закрыты, критических проблем и предупреждений
+  нет. В ходе проверки нашёл и сразу исправил ещё одно отступление в порядке
+  импортов. Готовым к архивированию change не объявляю: сдвиги раскладки (CLS)
+  по-прежнему не измерены.
+
+  ┌─────────────────┬────────────────────────────────────────────────────────┐
+  │    Измерение    │                       Результат                        │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Полнота         │ 22/22 задач; 19/19 требований                          │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Корректность    │ Все сценарии, проверенные сборкой и в браузере,        │
+  │                 │ проходят. CLS не измерен                               │
+  ├─────────────────┼────────────────────────────────────────────────────────┤
+  │ Согласованность │ Решения design и конвенции соблюдены                   │
+  └─────────────────┴────────────────────────────────────────────────────────┘
+
+  Прошлые замечания
+  - Критерий 5.3 в tasks.md теперь ожидает 1 и поясняет, почему; фактический
+    grep -c действительно даёт 1.
+  - Плашка сорта без фото: проверил в браузере, временно убрав фото Эфиопии.
+    Плашка показывает «цветочный» и «Светлая обжарка», images.ts восстановлен
+    побайтно. Метка обжарки выводится и в плашке, и в надзаголовке ниже — так
+    задано в design.
+  - Кнопка «Открыть в Яндекс Картах»: рамка 1px цвета border на месте, видна на
+    скриншоте.
+  - Порядок импортов: в subscription.tsx @/data всё ещё стоял раньше @/lib. Этот
+    файл пропустили и в прошлом отчёте, и при исправлении; переставил сейчас.
+    - В content.ts порядок задан дословным контрактом из design.
+    - В get-products.ts такой порядок был ещё до этого change. Оба места не
+      трогал.
+  - Литерал 'Основная навигация' в header.tsx остаётся. Design сам задаёт это
+    значение в контракте SiteNav, а вынести его в content.ts контракт не
+    позволяет.
+
+  Что прогнал заново
+  - lint, typecheck, format:check, build завершились с кодом 0.
+  - Проверки запрещённых шаблонов из 6.2 ничего не находят. 'use client' есть
+    только в lead-intent-link.tsx.
+  - Собранный HTML содержит все пять контрольных строк спеки, предзагрузка
+    изображения одна (фото hero).
+  - Повторил браузерный прогон 6.3 по всем пунктам, расхождений нет. Порядок
+    блоков: header, products, about, subscription, delivery, lead-form, 
+    contacts, footer.
+
+  Не проверено
+  - CLS на Slow 4G не измерял. По коду все фото лежат в контейнерах с заданными
+    пропорциями, поэтому сдвигов быть не должно.
+  - Доступные имена кнопок проверены через Playwright, живым скринридером не
+    проверял.
+  - Автотестов по сценариям нет, они запланированы в задаче 11.
+
+  Перед коммитом: в рабочем дереве есть изменения не из этого change: удалённые
+  openspec/changes/content-and-data/*, каталог
+  archive/2026-10-16-content-and-data/, add-lead-form/ и файл
+  2026-10-16-030327-…txt. Их стоит закоммитить отдельно.
+
+✻ Cooked for 1m 33s · done 10:21

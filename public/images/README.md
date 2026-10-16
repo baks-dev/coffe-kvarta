@@ -14,3 +14,20 @@
 
 - WebP q90, без предсжатия; next/image сам создаёт srcset и конвертирует.
 - Фото товаров обрезаны до квадрата 800×800.
+
+## Рукописные надписи
+
+Файлы `public/handwriting/*.svg` — контуры шрифта [Caveat](https://github.com/google/fonts/tree/main/ofl/caveat) (SIL Open Font License 1.1). Шрифт в репозиторий не коммитится, на сайт не подключается: из него сгенерированы только векторные пути.
+
+| Файл                           | Текст                            |
+| ------------------------------ | -------------------------------- |
+| `handwriting/fresh-weekly.svg` | «Свежая обжарка / каждую неделю» |
+| `handwriting/with-love.svg`    | «С любовью / к хорошему кофе»    |
+
+Перегенерация (из корня репозитория):
+
+```bash
+T=$(mktemp -d) && curl -sL -o "$T/caveat.ttf" "https://github.com/google/fonts/raw/main/ofl/caveat/Caveat%5Bwght%5D.ttf" && pnpm build:handwriting "$T/caveat.ttf" && pnpm prettier --write src/data/handwriting.ts
+```
+
+Строки берутся из `content.hero.handwriting` и `content.about.handwriting`; при их изменении команду нужно запустить снова.

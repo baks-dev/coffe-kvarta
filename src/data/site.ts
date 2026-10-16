@@ -15,4 +15,5 @@ export const siteData = {
   pickup: {
     address: 'Минск, ул. Короля, 9',
   },
+  geo: { lat: 53.902189, lon: 27.542084 },
 };
