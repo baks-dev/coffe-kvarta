@@ -1,0 +1,324 @@
+ ▐▛███▛█   Claude Code v2.1.301
+▝▜██████▀  Opus 5.5 · Claude Pro
+ ▝▝   ▝▝   /mnt/1TB/HTML/coffe-kvarta
+
+
+❯ /model                                                                        
+  ⎿  Set model to Opus 5.5 and saved as your default for new sessions
+
+❯ .agents/skills/openspec-propose/SKILL.md создай спецификацию по задаче        
+  tasks/05-lead-form-ui.md                                                      
+
+  Listed 1 directory, ran 4 shell commands (ctrl+o to expand)
+
+● Нашёл в репозитории уже существующий, но пустой change add-lead-form (только
+  .openspec.yaml) — продолжу его, а не создавать новый. Дочитываю спецификации,
+  ADR и контент.
+
+  Searched for 1 pattern, read 1 file, listed 2 directories, ran 2 shell commands (ctrl+o to expand)
+
+● Проверяю документацию Next.js 16 по формам и компоненты дизайн-системы, после
+  чего сформулирую вопросы, влияющие на объём задачи.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Перед написанием артефактов нужно уточнить несколько решений: от них зависят
+  контракт API и критерии приёмки.
+
+● User answered Claude's questions:
+  ⎿  · Как форма должна использовать товар, выбранный кнопкой «Хочу» или 
+     «Оформить подписку»? Сейчас намерение содержит interest и productId. → 
+     productId в заявке + плашка (Recommended)
+     · Какие поля обязательные и что выбрано в «что интересует» по умолчанию? → 
+     Имя+телефон, «Разовый заказ» (Recommended)
+     · Тестового стека в проекте пока нет: Vitest/RTL запланированы в задаче 11.
+     Добавлять тесты в этом change? → Vitest для схемы (Recommended)
+     · Как вести себя полю телефона при вводе? → Подсказка + формат на blur 
+     (Recommended)
+
+● Принято, беру рекомендованные варианты. Получаю инструкции схемы для
+  артефактов.
+
+  Searched for 2 patterns, ran 4 shell commands (ctrl+o to expand)
+
+● Разведку провёл: изучил зависимости (react-hook-form 7.90, @hookform/resolvers
+  5.9 с zod 4, vitest 5), шину намерений lead-intent.ts, слот в LeadSection и
+  требования landing-page, которые затронет форма. Теперь пишу proposal.
+
+● Write(openspec/changes/add-lead-form/proposal.md)
+  ⎿  Wrote 48 lines to openspec/changes/add-lead-form/proposal.md
+      1 # Proposal
+      3 ## Why
+      5 Главная цель лендинга — заявка, но в секции `#lead-form` пока тол
+        требует, чтобы неверный белорусский номер не принимался и сопрово
+        орую заявку, а неудачная отправка была видна человеку вместе с по
+        дсказкой, что делать. Кнопки «Хочу» и «Оформить подписку» уже пер
+         не принимает. Задача 05 открывает путь задачам 06 (API), 07 (атр
+      6 
+      8 
+        b/lead-schema.ts`. Поля: имя, телефон, интере
+     … +87 lines (ctrl+o to expand)
+
+● Proposal готов. Пишу delta-спеки: новую lead-form и изменения в landing-page.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Write(openspec/changes/add-lead-form/specs/landing-page/spec.md)
+  ⎿  Wrote 27 lines to
+     openspec/changes/add-lead-form/specs/landing-page/spec.md
+      1 ## MODIFIED Requirements
+      3 ### Requirement: Оболочка секции заявки
+      4 Секция `#lead-form` SHALL показывать надзаголовок «Заявка», загол
+        ёх шагов, место для формы и строку «Удобнее позвонить?» со ссылко
+        MUST NOT показывать заглушку, а строка с телефоном MUST оставатьс
+        я. Главная страница `/` MUST передавать в это место форму заявки 
+      5 
+      6 #### Scenario: Без формы
+      8 - **THEN** секция показывает заголовок, вводный текст «Корзины и 
+        нит 
+     … +39 lines (ctrl+o to expand)
+
+● Write(openspec/changes/add-lead-form/specs/lead-form/spec.md)
+  ⎿  Wrote 241 lines to
+     openspec/changes/add-lead-form/specs/lead-form/spec.md
+       1 # Spec Delta
+       3 ## Purpose
+       5 Форма заявки на главной странице «Кварты». Она принимает имя, бе
+         о отправки, отправляет ровно одну заявку на нажатие и честно соо
+         лать дальше.
+       7 ## ADDED Requirements
+       9 ### Requirement: Поля формы
+          «Телефон» (обязательно), «Что интересует» — группа из трёх ради
+         а) — и «Комментарий» (необязательно, многострочное). После загру
+         ормы — кнопка «Отправит
+     … +386 lines (ctrl+o to expand)
+
+  Searched for 1 pattern, listed 1 directory, ran 2 shell commands (ctrl+o to expand)
+
+● Спеки готовы, openspec validate --strict проходит. Пишу design.md: контракты
+  модулей, образцы кода и граничные случаи.
+
+● Write(openspec/changes/add-lead-form/design.md)
+  ⎿  Wrote 609 lines to openspec/changes/add-lead-form/design.md
+      1 # Design
+      3 ## Контекст
+      5 Зачем нужен change — см. `proposal.md`. Здесь только то, на что о
+        пирается реализация.
+      7 - **Next.js 16.4, React 19.3, `cacheComponents: true`** (`next.co
+        ation'`: если в маршрут попадёт работа во время запроса (`cookies
+        Клиентский компонент формы этому не мешает, пока он не обращается
+         к request-time API на сервере.
+        tsx` принимает `children` и рисует их в `<div className="mt-10">`
+        app/page.tsx` рендерит `<Lea
+     … +914 lines (ctrl+o to expand)
+
+● Проверяю design на неоднозначности — уточню тип leadSchema (нужен ZodObject,
+  чтобы задача 07 могла вызвать .extend), а также образцы эффектов.
+
+● Update(openspec/changes/add-lead-form/design.md)
+  ⎿  Added 4 lines, removed 3 lines
+      178   * - interest: z.enum(LEAD_INTERESTS), ошибка → interestInvali
+           d
+      179   * - comment: string → trim; length > 500 → commentTooLong; по
+            умолчанию '' (ключ может отсутствовать)
+      180   * - productId: string, /^[a-z0-9-]{1,40}$/, необязательный, о
+           шибка → productInvalid
+      181 - * Неизвестные ключи отбрасываются (поведение z.object по умол
+          -чанию), чтобы 07 могла добавить                               
+      182 - * attribution, не ломая клиентов, которые его не шлют.       
+      181 + * Неизвестные ключи отбрасываются (поведение z.object по умол
+          +чанию).                                                       
+      182   * Тексты ошибок задаются через параметр `{ error: LEAD_ERRORS
+           .… }` (API Zod 4).
+      183 + * Тип НЕ аннотируется вручную: схема остаётся выведенным `z.o
+          +bject({...})` (ZodObject),                                    
+      184 + * чтобы задача 07 могла сделать `leadSchema.extend({ attribut
+          +ion: … })`.                                                   
+      185   */
+      185 -export const leadSchema: z.ZodType<Lead, LeadFormValues>;     
+      186 +export const leadSchema = z.object({ /* name, phone, interest,
+          + comment, productId */ });                                    
+      187  
+      188  /** Сырые значения формы (вход схемы). */
+      189  export interface LeadFormValues {
+
+● Update(openspec/changes/add-lead-form/design.md)
+  ⎿  Added 1 line, removed 1 line
+      213    | { status: 'error'; message: string }; //                  
+                  HTTP 4xx/5xx прочие — клиент читает как сбой
+      214  ```
+      215  
+      216 -Типы `LeadFormValues` и `Lead` можно вывести через `z.input` /
+          - `z.output` — тогда они должны совпадать с интерфейсами выше. 
+          -Экспортируемые имена обязательны.                             
+      216 +Типы `LeadFormValues` и `Lead` можно объявить как `z.input<typ
+          +eof leadSchema>` / `z.output<typeof leadSchema>` — тогда они д
+          +олжны совпадать с интерфейсами выше по полям и опциональности.
+          + Экспортируемые имена обязательны.                            
+      217  
+      218  ### `src/lib/submit-lead.ts`
+      219  
+
+● Update(openspec/changes/add-lead-form/design.md)
+  ⎿  Added 2 lines, removed 2 lines
+      405  const statusRef = useRef<LeadFormStatus>('idle');
+      406  const [status, setStatusState] = useState<LeadFormStatus>('idl
+           e');
+      407  const [submittedPhone, setSubmittedPhone] = useState('');
+      408 -const setStatus = (next: LeadFormStatus) => {                 
+      408 +const setStatus = useCallback((next: LeadFormStatus) => {     
+      409    statusRef.current = next;
+      410    setStatusState(next);
+      411 -};                                                            
+      411 +}, []);                                                       
+      412  
+      413  const onValid = async (lead: Lead) => {
+      414    if (inFlightRef.current) return; // синхронно, до любого awa
+           it
+
+● Update(openspec/changes/add-lead-form/design.md)
+  ⎿  Added 13 lines, removed 1 line
+      451  Фокус после смены статуса ставится в эффекте, который только *
+           *вызывает метод DOM**, не `setState` (правило `set-state-in-ef
+           fect` не нарушается):
+      452  
+      453  ```tsx
+      454 +const focusNameOnIdleRef = useRef(false); // true ставит тольк
+          +о кнопка «Отправить ещё одну заявку»                          
+      455 +                                                              
+      456 +const startOver = () => {                                     
+      457 +  reset(defaultValues);                                       
+      458 +  focusNameOnIdleRef.current = true;                          
+      459 +  setStatus('idle');                                          
+      460 +};                                                            
+      461 +                                                              
+      462  useEffect(() => {
+      463    if (status === 'success' || status === 'duplicate') resultHe
+           adingRef.current?.focus();
+      464    if (status === 'error') submitRef.current?.focus();
+      457 -}, [status]);                                                 
+      465 +  if (status === 'idle' && focusNameOnIdleRef.current) {      
+      466 +    focusNameOnIdleRef.current = false;                       
+      467 +    setFocus('name');                                         
+      468 +  }                                                           
+      469 +}, [status, setFocus]);                                       
+      470  ```
+      471  
+      472  ### Признак гидратации без `setState` в эффекте
+
+● Update(openspec/changes/add-lead-form/design.md)
+  ⎿  Added 3 lines, removed 1 line
+      505      }
+      506      applyIntent(intent);
+      507    });
+      508 -}, [applyIntent, reset]);                                     
+      508 +}, [applyIntent, reset, setStatus]);                          
+      509  ```
+      510  
+      511 +Если намерение пришло в `success`/`duplicate`, фокус остаётся 
+          +на месте: страницу к форме прокручивает сама ссылка-якорь.    
+      512 +                                                              
+      513  ### Переформатирование телефона на `blur`
+      514  
+      515  ```tsx
+
+● Update(openspec/changes/add-lead-form/design.md)  ⎿  Added 1 line, removed 1 line
+      605  | Намерение в `sending` | игнорируется |
+      606  | Намерение в `success`/`duplicate` | `reset` → `idle` → приме
+           нить |
+      607  | Намерение в `error` | применяется, блок ошибки остаётся |
+      608 -| «Отправить ещё одну заявку» | `reset(defaultValues)`, `setSt
+          -atus('idle')`, `setFocus('name')` после рендера (в эффекте по 
+          -`[status]` для `idle`, только если переход был из `success`/`d
+          -uplicate`) |                                                  
+      608 +| «Отправить ещё одну заявку» | `startOver()`: `reset(defaultV
+          +alues)`, флаг `focusNameOnIdleRef`, `setStatus('idle')`; фокус
+          + в «Имя» ставит эффект (см. «Образцы») |                      
+      609  | JS отключён / до гидратации | кнопка `disabled`, `<noscript>
+           ` с телефоном, неявная отправка не срабатывает |
+      610  | 360 px | одна колонка, кнопка `w-full`, нет горизонтальной п
+           рокрутки |
+      611  | 768 / 1440 px | `md:grid-cols-2` для имени и телефона, `max-
+           w-2xl` (672 px) у формы |
+
+● Design готов. Перед tasks.md смотрю формат таблицы команд и раздела допущений
+  в README.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+● Пишу tasks.md.
+
+● Write(openspec/changes/add-lead-form/tasks.md)
+  ⎿  Wrote 41 lines to openspec/changes/add-lead-form/tasks.md
+      1 # Tasks
+      3 Этот change добавляет Vitest (только `src/lib`, окружение `node`)
+        , поэтому логика начинается с тестов по сценариям `specs/lead-for
+        зации не менять, а только добиваться их прохождения. UI-сценарии 
+        ся из `design.md` дословно. Эндпоинта `POST /api/lead` в этом cha
+        nge нет (задача 06), поэтому без временной заглушки из 5.3 форма 
+      4 
+      5 ## 1. Зависимости и тестовый стек
+      7 - [ ] 1.1 `package.json`, `pnpm-lock.yaml`, `vitest.config.ts`: `
+        st`;
+     … +194 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Спецификация по задаче 05 готова, openspec validate add-lead-form --strict
+  проходит. Код проекта я не менял: созданы только планировочные файлы.
+
+  Change: openspec/changes/add-lead-form/. В репозитории уже лежала пустая
+  заготовка с этим именем (только .openspec.yaml), и я дописал её, а не создавал
+  новую.
+
+  Что в артефактах:
+  - proposal.md — зачем нужна форма, что меняется и что не входит в задачу. Не
+    входят API (06), UTM (07), Telegram и тесты компонента на RTL (11).
+  - specs/lead-form/spec.md — новая capability, 13 требований со сценариями
+    WHEN/THEN:
+    - поля и правила номера: 9 допустимых и 10 недопустимых примеров;
+    - подсказка и переформатирование номера при уходе из поля;
+    - ошибки под полями;
+    - защита от двойной отправки;
+    - ответы сервера: ok, duplicate, invalid и сбой;
+    - предзаполнение из карточек и подписки;
+    - поведение без JavaScript и раскладка формы.
+  - specs/landing-page/spec.md — меняются два требования: в слоте секции теперь
+    стоит форма, а клиентский код разрешён и форме.
+  - design.md — все обязательные разделы. Главное в нём:
+    - контракт POST /api/lead, по которому задача 06 сделает сервер;
+    - таблица разбора ответов;
+    - тексты формы дословно;
+    - образцы для мест, где легко ошибиться: защита от двойного клика и признак
+      гидратации, написанные с учётом правил линтера react-hooks.
+  - tasks.md — 15 задач в 7 группах. Сначала тесты Vitest, потом реализация. У
+    каждой задачи есть критерий готовности, последняя — общая проверка lint,
+    typecheck, test и build.
+
+  Что выбрано по вашим ответам:
+  - Выбранный товар уходит в заявку как productId и показывается плашкой над
+    полями.
+  - Обязательны имя и телефон, по умолчанию отмечен «Разовый заказ».
+  - Vitest ставится только для src/lib.
+  - Маски ввода нет: подсказка под полем и переформатирование номера при уходе
+    из поля.
+
+  Что я решил сам (записано в design и в пункты README):
+  - Номер принимается и девятью цифрами без префикса: 29 123-45-67.
+  - Городские номера отклоняются, как сказано в задаче 05.
+  - Если запрос не ответил за 15 секунд, это считается сбоем.
+  - Пока не загрузился JavaScript, кнопка неактивна. Иначе браузер отправит
+    форму сам, и имя с телефоном попадут в адресную строку.
+
+  На что обратить внимание:
+  - Пока нет задачи 06, сервер на /api/lead отвечает 404, и форма показывает
+    ошибку. Так и задумано. Успех и повторную заявку задача 5.3 проверяет через
+    временную заглушку, которую потом нужно удалить.
+  - В openspec/specs/content-and-data/spec.md сценарий текстов устарел: там
+    заголовок «Свежий кофе», а на лендинге «Кофе, который приезжает свежим».
+    Этот change его не трогает, но спеку стоит поправить отдельно.
+
+  Посмотрите артефакты. Когда будете готовы, запустите /openspec-apply-change
+  или попросите меня применить change.
+
+✻ Crunched for 10m 14s · done 11:36
