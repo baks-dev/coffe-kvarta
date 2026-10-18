@@ -1,0 +1,39 @@
+{
+  "mode": "change",
+  "change": "add-lead-form",
+  "project": "/mnt/1TB/HTML/coffe-kvarta",
+  "git": true,
+  "branch": "change/add-lead-form",
+  "base_branch": "master",
+  "base_commit": "9d12d6e",
+  "protected_tests": [],
+  "tasks": {
+    "1.1": { "tag": "infra", "status": "done", "returns": 0, "artifacts": [], "reports": ["openspec/changes/add-lead-form/workflow/1.1/01-infra.md", "openspec/changes/add-lead-form/workflow/1.1/02-verifier.md", "openspec/changes/add-lead-form/workflow/1.1/03-spec-reviewer.md"], "runs": [{ "agent": "infra", "model": "Executor", "session_id": "caf77a71-2e14-48b4-80c0-c9bd9573603c", "status": "done", "report": "openspec/changes/add-lead-form/workflow/1.1/01-infra.md" }, { "agent": "verifier", "model": "Gemma4-Large", "session_id": "13485cdc-5ad5-47b4-bcbf-815186aa6ddb", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/1.1/02-verifier.md" }, { "agent": "spec-reviewer", "model": "Gemma4-Large", "session_id": "b68a5e23-5fe6-4a56-b7ee-7567f90e7f52", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/1.1/03-spec-reviewer.md" }] },
+    "1.2": { "tag": "infra", "status": "done", "returns": 0, "artifacts": [], "reports": ["openspec/changes/add-lead-form/workflow/1.2/01-infra.md", "openspec/changes/add-lead-form/workflow/1.2/02-verifier.md", "openspec/changes/add-lead-form/workflow/1.2/03-spec-reviewer.md"], "runs": [{ "agent": "infra", "model": "Executor", "session_id": "86604020-5ef3-45a9-906b-5cd3507015e8", "status": "done", "report": "openspec/changes/add-lead-form/workflow/1.2/01-infra.md" }, { "agent": "verifier", "model": "Gemma4-Large", "session_id": "8b1f68dc-1183-4083-9639-efcc11989526", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/1.2/02-verifier.md" }, { "agent": "spec-reviewer", "model": "Gemma4-Large", "session_id": "976cb270-41d9-4be1-85f0-8fd81ca6813d", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/1.2/03-spec-reviewer.md" }] },
+    "1.3": { "tag": "infra", "status": "done", "returns": 0, "artifacts": [], "reports": ["openspec/changes/add-lead-form/workflow/1.3/01-infra.md", "openspec/changes/add-lead-form/workflow/1.3/02-verifier.md", "openspec/changes/add-lead-form/workflow/1.3/03-spec-reviewer.md"], "runs": [{ "agent": "infra", "model": "Executor", "session_id": "a338db49-af2f-4495-b544-306f65dc1c60", "status": "done", "report": "openspec/changes/add-lead-form/workflow/1.3/01-infra.md" }, { "agent": "verifier", "model": "Gemma4-Large", "session_id": "81216ca9-31d6-4aa6-8842-e286669cdc4e", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/1.3/02-verifier.md" }, { "agent": "spec-reviewer", "model": "Gemma4-Large", "session_id": "df2d0f61-47fd-4a12-91c6-e8cdcf7cc9ad", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/1.3/03-spec-reviewer.md" }] },
+    "2.1": { "tag": "stub", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "2.2": { "tag": "test", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "2.3": { "tag": "code", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "3.1": { "tag": "stub", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "3.2": { "tag": "test", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "3.3": { "tag": "code", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "4.1": { "tag": "stub", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "4.2": { "tag": "test", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "4.3": { "tag": "code", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "5.1": { "tag": "stub", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "5.2": { "tag": "stub", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "5.3": { "tag": "test", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "5.4": { "tag": "test", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "5.5": { "tag": "code", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "5.6": { "tag": "code", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "5.7": { "tag": "docs", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "6.1": { "tag": "manual", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] },
+    "6.2": { "tag": "verify", "status": "running", "returns": 0, "artifacts": [], "reports": [], "runs": [] }
+  },
+  "acceptance": {
+    "round": 1,
+    "status": "pending",
+    "verdicts": []
+  },
+  "decisions": []
+}
