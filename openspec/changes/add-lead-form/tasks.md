@@ -95,7 +95,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
 
 `src/lib/lead-schema.ts` is shared by the form and the future `POST /api/lead` handler (task 06). Tested in the Node environment through `leadSchema.safeParse`.
 
-- [ ] 3.1 [stub] Create the `src/lib/lead-schema.ts` skeleton
+- [x] 3.1 [stub] Create the `src/lib/lead-schema.ts` skeleton
   - Files: `src/lib/lead-schema.ts` (create; overwrite the leftover empty file)
   - Steps:
     1. Import `z` from `zod` and `LEAD_INTERESTS` from `@/lib/lead-intent`. Do not import `getProductById` or `normalizeBelarusPhone` yet (unused imports fail lint).
@@ -107,7 +107,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: none
   - Done when: `pnpm typecheck` passes; `pnpm exec eslint src/lib/lead-schema.ts --max-warnings 0` passes
 
-- [ ] 3.2 [test] Write unit tests for `leadSchema`
+- [x] 3.2 [test] Write unit tests for `leadSchema`
   - Files: `src/lib/lead-schema.test.ts` (create)
   - Steps:
     1. Import `describe`, `expect`, `it` from `vitest` and `LEAD_MESSAGES`, `leadSchema` from `@/lib/lead-schema`. No `// @vitest-environment` line.
@@ -131,7 +131,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: 1.3, 3.1
   - Done when: `pnpm typecheck` compiles; `pnpm exec eslint src/lib/lead-schema.test.ts --max-warnings 0` passes; `pnpm test src/lib/lead-schema.test.ts` fails
 
-- [ ] 3.3 [code] Implement `leadSchema`
+- [x] 3.3 [code] Implement `leadSchema`
   - Files: `src/lib/lead-schema.ts` (modify)
   - Steps:
     1. Add imports `getProductById` from `@/lib/get-products` and `normalizeBelarusPhone` from `@/lib/phone`.
