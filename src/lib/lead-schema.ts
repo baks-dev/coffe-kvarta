@@ -3,10 +3,7 @@ import { getProductById } from '@/lib/get-products';
 import { LEAD_INTERESTS } from '@/lib/lead-intent';
 import { normalizeBelarusPhone } from '@/lib/phone';
 
-/** Максимальная длина имени. */
 export const LEAD_NAME_MAX = 60;
-
-/** Максимальная длина комментария. */
 export const LEAD_COMMENT_MAX = 500;
 
 /** Тексты ошибок валидации; общие для формы и POST /api/lead. */

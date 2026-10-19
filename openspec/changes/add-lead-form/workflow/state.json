@@ -82,6 +82,54 @@
         { "agent": "coder", "model": "llama.cpp/Executor", "session_id": "f9754bca-1073-483f-b560-7ab5ab07e0e7", "status": "done", "report": "openspec/changes/add-lead-form/workflow/2.3/01-coder.md", "started": 1792444256, "elapsed_sec": 1247 },
         { "agent": "verifier", "model": "llama.cpp/GLM", "session_id": "9082a425-63eb-4cf3-8593-6827e95f8900", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/2.3/02-verifier.md", "started": 1792445506, "elapsed_sec": 670 }
       ]
+    },
+    "3.1": {
+      "tag": "stub",
+      "status": "done",
+      "returns": 0,
+      "artifacts": [
+        { "path": "src/lib/lead-schema.ts", "kind": "modified" }
+      ],
+      "reports": [
+        "openspec/changes/add-lead-form/workflow/3.1/01-stubber.md",
+        "openspec/changes/add-lead-form/workflow/3.1/02-verifier.md"
+      ],
+      "runs": [
+        { "agent": "stubber", "model": "Ornith", "session_id": "4735655c-88d5-4a23-bb44-dbd3756a44e6", "status": "done", "report": "openspec/changes/add-lead-form/workflow/3.1/01-stubber.md", "started": 1792446000, "elapsed_sec": 5 },
+        { "agent": "verifier", "model": "GLM", "session_id": "253dd502-e1fd-45bc-a073-8dc19947fd99", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/3.1/02-verifier.md", "started": 1792446005, "elapsed_sec": 3 }
+      ]
+    },
+    "3.2": {
+      "tag": "test",
+      "status": "done",
+      "returns": 0,
+      "artifacts": [
+        { "path": "src/lib/lead-schema.test.ts", "kind": "created" }
+      ],
+      "reports": [
+        "openspec/changes/add-lead-form/workflow/3.2/01-tester.md",
+        "openspec/changes/add-lead-form/workflow/3.2/02-verifier.md"
+      ],
+      "runs": [
+        { "agent": "tester", "model": "GLM", "session_id": "ae971bcf-bf99-4286-8521-3564b3b5e017", "status": "done", "report": "openspec/changes/add-lead-form/workflow/3.2/01-tester.md", "started": 1792446100, "elapsed_sec": 10 },
+        { "agent": "verifier", "model": "GLM", "session_id": "9e657dd5-4e99-48d9-b90d-67ad81cbb6e2", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/3.2/02-verifier.md", "started": 1792446110, "elapsed_sec": 5 }
+      ]
+    },
+    "3.3": {
+      "tag": "code",
+      "status": "done",
+      "returns": 0,
+      "artifacts": [
+        { "path": "src/lib/lead-schema.ts", "kind": "modified" }
+      ],
+      "reports": [
+        "openspec/changes/add-lead-form/workflow/3.3/01-verifier.md",
+        "openspec/changes/add-lead-form/workflow/3.3/02-verifier.md"
+      ],
+      "runs": [
+        { "agent": "verifier", "model": "GLM", "session_id": "9cf36b3c-002b-490b-828c-b129a1d17c2a", "status": "fail", "report": "openspec/changes/add-lead-form/workflow/3.3/01-verifier.md", "started": 1792446200, "elapsed_sec": 15 },
+        { "agent": "verifier", "model": "GLM", "session_id": "82fbf34a-ed61-4b9b-acd6-bf0e68e57a8f", "status": "pass", "report": "openspec/changes/add-lead-form/workflow/3.3/02-verifier.md", "started": 1792446215, "elapsed_sec": 12 }
+      ]
     }
   },
   "acceptance": {
