@@ -20,13 +20,7 @@ export function normalizeBelarusPhone(input: string): string | null {
   }
 
   // Step 4: If s contains + at any index other than 0, return null (this also rejects ++…).
-  // Check if there's a + at a position other than 0.
-  const plusIndex = s.indexOf('+');
-  if (plusIndex !== -1 && plusIndex !== 0) {
-    return null;
-  }
-  // Also reject if there's a second + (e.g., ++375...)
-  if (plusIndex === 0 && s.indexOf('+', 1) !== -1) {
+  if (s.indexOf('+') > 0 || (s.indexOf('+') === 0 && s.lastIndexOf('+') > 0)) {
     return null;
   }
 
@@ -34,18 +28,19 @@ export function normalizeBelarusPhone(input: string): string | null {
   const digits = s.replace(/\D/g, '');
 
   // Step 6: If s starts with +: if digits.length === 12 and digits.startsWith('375'), let national = digits.slice(3); otherwise return null.
-  // Step 7: Otherwise: if digits.length === 12 and digits.startsWith('375'), national = digits.slice(3); else if digits.length === 11 and digits.startsWith('80'), national = digits.slice(2); else if digits.length === 9, national = digits; else return null.
+  // Otherwise: if digits.length === 12 and digits.startsWith('375'), national = digits.slice(3);
+  // else if digits.length === 11 and digits.startsWith('80'), national = digits.slice(2);
+  // else if digits.length === 9, national = digits;
+  // else return null.
   let national: string;
 
   if (s.startsWith('+')) {
-    // Starts with +
     if (digits.length === 12 && digits.startsWith('375')) {
       national = digits.slice(3);
     } else {
       return null;
     }
   } else {
-    // Does not start with +
     if (digits.length === 12 && digits.startsWith('375')) {
       national = digits.slice(3);
     } else if (digits.length === 11 && digits.startsWith('80')) {

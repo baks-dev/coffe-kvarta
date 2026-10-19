@@ -53,7 +53,7 @@ Installs the form and test dependencies and replaces the leftover Vitest setup. 
 
 Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environment.
 
-- [ ] 2.1 [stub] Create the `src/lib/phone.ts` skeleton
+- [x] 2.1 [stub] Create the `src/lib/phone.ts` skeleton
   - Files: `src/lib/phone.ts` (create; overwrite the leftover file completely)
   - Steps:
     1. Replace the whole file content.
@@ -64,7 +64,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: none
   - Done when: `pnpm typecheck` passes; `pnpm exec eslint src/lib/phone.ts --max-warnings 0` passes
 
-- [ ] 2.2 [test] Write unit tests for `normalizeBelarusPhone` and `formatBelarusPhone`
+- [x] 2.2 [test] Write unit tests for `normalizeBelarusPhone` and `formatBelarusPhone`
   - Files: `src/lib/phone.test.ts` (create)
   - Steps:
     1. Import `describe`, `expect`, `it` from `vitest` and `normalizeBelarusPhone`, `formatBelarusPhone` from `@/lib/phone`. No `// @vitest-environment` line (Node environment).
@@ -81,7 +81,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: 1.3, 2.1
   - Done when: `pnpm typecheck` compiles; `pnpm exec eslint src/lib/phone.test.ts --max-warnings 0` passes; `pnpm test src/lib/phone.test.ts` fails
 
-- [ ] 2.3 [code] Implement `normalizeBelarusPhone` and `formatBelarusPhone`
+- [x] 2.3 [code] Implement `normalizeBelarusPhone` and `formatBelarusPhone`
   - Files: `src/lib/phone.ts` (modify)
   - Steps:
     1. Implement `normalizeBelarusPhone` step by step as in «Algorithms / normalizeBelarusPhone» (steps 1–9). Compare the operator code with `(BELARUS_MOBILE_CODES as readonly string[]).includes(...)`; no `any`.
