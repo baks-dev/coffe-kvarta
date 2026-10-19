@@ -17,7 +17,7 @@ Rules for every task below:
 
 Installs the form and test dependencies and replaces the leftover Vitest setup. No tests are written here.
 
-- [ ] 1.1 [infra] Install the form and test dependencies
+- [x] 1.1 [infra] Install the form and test dependencies
   - Files: `package.json` (modify), `pnpm-lock.yaml` (modify)
   - Steps:
     1. Run `pnpm add react-hook-form@7.90.0 @hookform/resolvers@5.9.2`.
@@ -29,7 +29,7 @@ Installs the form and test dependencies and replaces the leftover Vitest setup. 
   - Done when: `pnpm ls react-hook-form @hookform/resolvers --depth 0` passes; `pnpm ls -D jsdom @testing-library/react @testing-library/dom @testing-library/user-event vitest --depth 0` passes
     Manual: the first command lists `react-hook-form 7.90.0` and `@hookform/resolvers 5.9.2` under `dependencies`; the second lists `jsdom 30.1.3`, `@testing-library/react 16.3.3`, `@testing-library/dom 10.4.2`, `@testing-library/user-event 14.6.8`, `vitest 5.0.5` under `devDependencies`.
 
-- [ ] 1.2 [infra] Replace `vitest.config.ts` with `vitest.config.mts`
+- [x] 1.2 [infra] Replace `vitest.config.ts` with `vitest.config.mts`
   - Files: `vitest.config.ts` (delete), `vitest.config.mts` (create)
   - Steps:
     1. Delete `vitest.config.ts`.
@@ -38,7 +38,7 @@ Installs the form and test dependencies and replaces the leftover Vitest setup. 
   - Depends on: 1.1
   - Done when: `test ! -e vitest.config.ts` passes; `pnpm exec eslint vitest.config.mts --max-warnings 0` passes; `pnpm exec prettier --check vitest.config.mts` passes
 
-- [ ] 1.3 [infra] Delete the leftover test files
+- [x] 1.3 [infra] Delete the leftover test files
   - Files: `src/lib/phone.test.ts` (delete), `src/lib/lead-schema.test.ts` (delete), `src/lib/submit-lead.test.ts` (delete)
   - Steps:
     1. Delete `src/lib/phone.test.ts`.

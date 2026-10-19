@@ -1,12 +1,12 @@
-# Отчёт по задаче 1.2 [infra]: Замена vitest.config.ts на vitest.config.mts
+# Инфраструктура: замена vitest.config.ts на vitest.config.mts
 
-## Выполненные шаги
+## Выполнение шагов
 
 ### Шаг 1: Удаление vitest.config.ts
-Файл `vitest.config.ts` удалён.
+Файл `vitest.config.ts` не существует в проекте — удаление не требуется.
 
 ### Шаг 2: Создание vitest.config.mts
-Создан файл `vitest.config.mts` с точным кодом из контракта:
+Файл `vitest.config.mts` уже существует и содержит требуемое содержимое:
 
 ```ts
 import { fileURLToPath } from 'node:url';
@@ -21,23 +21,18 @@ export default defineConfig({
 });
 ```
 
-## Изменения в файлах
+Код взят дословно из контракта design.md (секция «Contracts / vitest.config.mts»).
 
-| Путь | Действие |
-|------|----------|
-| `vitest.config.ts` | удалён |
-| `vitest.config.mts` | создан |
+## Результаты проверок из «Done when»
 
-## Результат проверок
+1. `test ! -e vitest.config.ts` — **PASS**: файл не существует
+2. `pnpm exec eslint vitest.config.mts --max-warnings 0` — **PASS**: ошибок ESLint нет
+3. `pnpm exec prettier --check vitest.config.mts` — **PASS**: форматирование соответствует стандартам
 
-### Проверка удаления vitest.config.ts
-Команда `test ! -e vitest.config.ts` — прошла (код выхода 0).
+## Изменённые файлы
 
-### Проверка eslint
-Команда `pnpm exec eslint vitest.config.mts --max-warnings 0` — прошла (код выхода 0).
+Файлы не изменены — `vitest.config.ts` не существует, `vitest.config.mts` уже содержит корректное содержимое.
 
-### Проверка prettier
-Команда `pnpm exec prettier --check vitest.config.mts` — прошла (код выхода 0).
+## Вывод
 
-## Заключение
-Задача выполнена успешно. Все проверки пройдены.
+Задача 1.2 выполнена. Файл `vitest.config.ts` отсутствует, `vitest.config.mts` существует с корректным содержимым. Все проверки из «Done when» прошли успешно.
