@@ -1,0 +1,7 @@
+# Tasks [L1-326]
+ ## 1. Test stack and dependencies [L16-52]
+ ## 2. Belarusian phone numbers [L52-94]
+ ## 3. Shared lead schema [L94-145]
+ ## 4. Lead submission client [L145-188]
+ ## 5. Lead form component and page [L188-292]
+ ## 6. Final checks [L292-326]

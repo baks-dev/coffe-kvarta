@@ -1,33 +1,51 @@
+/** Коды мобильных операторов Беларуси. */
 export const BELARUS_MOBILE_CODES = ['25', '29', '33', '44'] as const;
 
 /**
  * Любая допустимая запись белорусского мобильного → '+375XXXXXXXXX'; иначе null.
- * Алгоритм — design.md, «Решения» п. 1.
+ * Не бросает исключений.
  */
 export function normalizeBelarusPhone(input: string): string | null {
+  // Step 1: Let s = input.trim().
   const s = input.trim();
 
-  // Проверка на недопустимые символы
-  const allowedChars = /[0-9 +()\-]/;
-  for (const char of s) {
-    if (!allowedChars.test(char)) return null;
+  // Step 2: If s === '', return null.
+  if (s === '') {
+    return null;
   }
 
-  // Проверка на '+': только первый символ и только один раз
-  const plusCount = s.split('+').length - 1;
-  if (plusCount > 1) return null;
-  if (plusCount === 1 && s[0] !== '+') return null;
+  // Step 3: If s contains any character outside 0-9, space, +, (, ), -, return null.
+  if (/[^0-9 +()-]/.test(s)) {
+    return null;
+  }
 
-  // Извлекаем только цифры
-  const digits = s.replace(/\d/g, '').replace(/[^\d]/g, '');
+  // Step 4: If s contains + at any index other than 0, return null (this also rejects ++…).
+  // Check if there's a + at a position other than 0.
+  const plusIndex = s.indexOf('+');
+  if (plusIndex !== -1 && plusIndex !== 0) {
+    return null;
+  }
+  // Also reject if there's a second + (e.g., ++375...)
+  if (plusIndex === 0 && s.indexOf('+', 1) !== -1) {
+    return null;
+  }
 
-  let national: string | null = null;
+  // Step 5: Let digits = s.replace(/\D/g, '').
+  const digits = s.replace(/\D/g, '');
+
+  // Step 6: If s starts with +: if digits.length === 12 and digits.startsWith('375'), let national = digits.slice(3); otherwise return null.
+  // Step 7: Otherwise: if digits.length === 12 and digits.startsWith('375'), national = digits.slice(3); else if digits.length === 11 and digits.startsWith('80'), national = digits.slice(2); else if digits.length === 9, national = digits; else return null.
+  let national: string;
 
   if (s.startsWith('+')) {
-    if (digits.length !== 12 || !digits.startsWith('375')) return null;
-    national = digits.slice(3);
+    // Starts with +
+    if (digits.length === 12 && digits.startsWith('375')) {
+      national = digits.slice(3);
+    } else {
+      return null;
+    }
   } else {
-    // Без префикса +
+    // Does not start with +
     if (digits.length === 12 && digits.startsWith('375')) {
       national = digits.slice(3);
     } else if (digits.length === 11 && digits.startsWith('80')) {
@@ -39,20 +57,30 @@ export function normalizeBelarusPhone(input: string): string | null {
     }
   }
 
-  // Проверка, что первые две цифры — код мобильного оператора
-  if (!BELARUS_MOBILE_CODES.includes(national.slice(0, 2) as any)) return null;
+  // Step 8: If national.slice(0, 2) is not one of BELARUS_MOBILE_CODES, return null.
+  if (!(BELARUS_MOBILE_CODES as readonly string[]).includes(national.slice(0, 2))) {
+    return null;
+  }
 
+  // Step 9: Return '+375' + national.
   return '+375' + national;
 }
 
 /**
- * Любая допустимая запись → '+375 29 123-45-67'. Недопустимая возвращается без изменений.
+ * Допустимая запись → '+375 XX XXX-XX-XX'; недопустимая возвращается без изменений.
  */
 export function formatBelarusPhone(input: string): string {
+  // Step 1: Let normalized = normalizeBelarusPhone(input).
   const normalized = normalizeBelarusPhone(input);
-  if (!normalized) return input;
 
-  // normalized = '+375XXXXXXXXX'
-  const digits = normalized.slice(1); // '375XXXXXXXXX'
-  return `+375 ${digits.slice(0, 2)} ${digits.slice(2, 5)}-${digits.slice(5, 7)}-${digits.slice(7)}`;
+  // Step 2: If normalized === null, return input unchanged.
+  if (normalized === null) {
+    return input;
+  }
+
+  // Step 3: Let n = normalized.slice(4) (9 digits).
+  const n = normalized.slice(4);
+
+  // Step 4: Return `+375 ${n.slice(0, 2)} ${n.slice(2, 5)}-${n.slice(5, 7)}-${n.slice(7, 9)}`.
+  return `+375 ${n.slice(0, 2)} ${n.slice(2, 5)}-${n.slice(5, 7)}-${n.slice(7, 9)}`;
 }
