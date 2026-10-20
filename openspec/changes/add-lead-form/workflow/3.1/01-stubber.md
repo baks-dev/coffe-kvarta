@@ -1,1 +1,0 @@
-Создан скелет модуля src/lib/lead-schema.ts: экспортированы LEAD_NAME_MAX, LEAD_COMMENT_MAX, LEAD_MESSAGES, LEAD_FIELDS, LeadField, LeadFormValues, Lead, LeadApiResponse и placeholder-схема leadSchema без проверок. pnpm typecheck и eslint прошли успешно.

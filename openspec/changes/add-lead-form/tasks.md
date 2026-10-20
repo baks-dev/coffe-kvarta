@@ -17,7 +17,7 @@ Rules for every task below:
 
 Installs the form and test dependencies and replaces the leftover Vitest setup. No tests are written here.
 
-- [x] 1.1 [infra] Install the form and test dependencies
+- [ ] 1.1 [infra] Install the form and test dependencies
   - Files: `package.json` (modify), `pnpm-lock.yaml` (modify)
   - Steps:
     1. Run `pnpm add react-hook-form@7.90.0 @hookform/resolvers@5.9.2`.
@@ -29,7 +29,7 @@ Installs the form and test dependencies and replaces the leftover Vitest setup. 
   - Done when: `pnpm ls react-hook-form @hookform/resolvers --depth 0` passes; `pnpm ls -D jsdom @testing-library/react @testing-library/dom @testing-library/user-event vitest --depth 0` passes
     Manual: the first command lists `react-hook-form 7.90.0` and `@hookform/resolvers 5.9.2` under `dependencies`; the second lists `jsdom 30.1.3`, `@testing-library/react 16.3.3`, `@testing-library/dom 10.4.2`, `@testing-library/user-event 14.6.8`, `vitest 5.0.5` under `devDependencies`.
 
-- [x] 1.2 [infra] Replace `vitest.config.ts` with `vitest.config.mts`
+- [ ] 1.2 [infra] Replace `vitest.config.ts` with `vitest.config.mts`
   - Files: `vitest.config.ts` (delete), `vitest.config.mts` (create)
   - Steps:
     1. Delete `vitest.config.ts`.
@@ -38,7 +38,7 @@ Installs the form and test dependencies and replaces the leftover Vitest setup. 
   - Depends on: 1.1
   - Done when: `test ! -e vitest.config.ts` passes; `pnpm exec eslint vitest.config.mts --max-warnings 0` passes; `pnpm exec prettier --check vitest.config.mts` passes
 
-- [x] 1.3 [infra] Delete the leftover test files
+- [ ] 1.3 [infra] Delete the leftover test files
   - Files: `src/lib/phone.test.ts` (delete), `src/lib/lead-schema.test.ts` (delete), `src/lib/submit-lead.test.ts` (delete)
   - Steps:
     1. Delete `src/lib/phone.test.ts`.
@@ -53,7 +53,7 @@ Installs the form and test dependencies and replaces the leftover Vitest setup. 
 
 Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environment.
 
-- [x] 2.1 [stub] Create the `src/lib/phone.ts` skeleton
+- [ ] 2.1 [stub] Create the `src/lib/phone.ts` skeleton
   - Files: `src/lib/phone.ts` (create; overwrite the leftover file completely)
   - Steps:
     1. Replace the whole file content.
@@ -64,7 +64,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: none
   - Done when: `pnpm typecheck` passes; `pnpm exec eslint src/lib/phone.ts --max-warnings 0` passes
 
-- [x] 2.2 [test] Write unit tests for `normalizeBelarusPhone` and `formatBelarusPhone`
+- [ ] 2.2 [test] Write unit tests for `normalizeBelarusPhone` and `formatBelarusPhone`
   - Files: `src/lib/phone.test.ts` (create)
   - Steps:
     1. Import `describe`, `expect`, `it` from `vitest` and `normalizeBelarusPhone`, `formatBelarusPhone` from `@/lib/phone`. No `// @vitest-environment` line (Node environment).
@@ -81,7 +81,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: 1.3, 2.1
   - Done when: `pnpm typecheck` compiles; `pnpm exec eslint src/lib/phone.test.ts --max-warnings 0` passes; `pnpm test src/lib/phone.test.ts` fails
 
-- [x] 2.3 [code] Implement `normalizeBelarusPhone` and `formatBelarusPhone`
+- [ ] 2.3 [code] Implement `normalizeBelarusPhone` and `formatBelarusPhone`
   - Files: `src/lib/phone.ts` (modify)
   - Steps:
     1. Implement `normalizeBelarusPhone` step by step as in «Algorithms / normalizeBelarusPhone» (steps 1–9). Compare the operator code with `(BELARUS_MOBILE_CODES as readonly string[]).includes(...)`; no `any`.
@@ -95,7 +95,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
 
 `src/lib/lead-schema.ts` is shared by the form and the future `POST /api/lead` handler (task 06). Tested in the Node environment through `leadSchema.safeParse`.
 
-- [x] 3.1 [stub] Create the `src/lib/lead-schema.ts` skeleton
+- [ ] 3.1 [stub] Create the `src/lib/lead-schema.ts` skeleton
   - Files: `src/lib/lead-schema.ts` (create; overwrite the leftover empty file)
   - Steps:
     1. Import `z` from `zod` and `LEAD_INTERESTS` from `@/lib/lead-intent`. Do not import `getProductById` or `normalizeBelarusPhone` yet (unused imports fail lint).
@@ -107,7 +107,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: none
   - Done when: `pnpm typecheck` passes; `pnpm exec eslint src/lib/lead-schema.ts --max-warnings 0` passes
 
-- [x] 3.2 [test] Write unit tests for `leadSchema`
+- [ ] 3.2 [test] Write unit tests for `leadSchema`
   - Files: `src/lib/lead-schema.test.ts` (create)
   - Steps:
     1. Import `describe`, `expect`, `it` from `vitest` and `LEAD_MESSAGES`, `leadSchema` from `@/lib/lead-schema`. No `// @vitest-environment` line.
@@ -131,7 +131,7 @@ Pure module `src/lib/phone.ts` (no React, no Next), tested in the Node environme
   - Depends on: 1.3, 3.1
   - Done when: `pnpm typecheck` compiles; `pnpm exec eslint src/lib/lead-schema.test.ts --max-warnings 0` passes; `pnpm test src/lib/lead-schema.test.ts` fails
 
-- [x] 3.3 [code] Implement `leadSchema`
+- [ ] 3.3 [code] Implement `leadSchema`
   - Files: `src/lib/lead-schema.ts` (modify)
   - Steps:
     1. Add imports `getProductById` from `@/lib/get-products` and `normalizeBelarusPhone` from `@/lib/phone`.
